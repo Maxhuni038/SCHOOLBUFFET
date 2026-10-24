@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Byfeja Shkollore · SchoolBuffet</title>
+<meta name="description" content="Menyja e byfese shkollore, porosit online dhe gjurmimi i statusit te porosive.">
+<meta name="theme-color" content="#2f8f5b">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/student.css">
+</head>
+<body class="student">
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-school"></use></svg></span>
+      <span>Byfeja Shkollore<small>SchoolBuffet</small></span>
+    </div>
+
+    <nav class="nav-tabs" aria-label="Navigimi kryesor">
+      <button class="nav-tab active" type="button" data-view="menu"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-sandwich"></use></svg>Menuja</button>
+      <button class="nav-tab" type="button" data-view="orders"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-receipt"></use></svg>Porosia ime</button>
+    </nav>
+
+    <button class="btn btn-soft cart-btn" type="button" id="openCart">
+      <svg class="icon" aria-hidden="true"><use href="#i-cart"></use></svg>
+      <span>Shporta</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main class="shell">
+  <section id="view-menu">
+    <div class="hero">
+      <div class="hero-copy">
+        <h1>Ushqim i fresket, pa rradhe ne hyrje</h1>
+        <p>Zgjidh produktet nga menyja e sotme e byfese, shtoji ne shporte dhe merr kodin e porosise. Mbarrit me telefon statusin: ne pritje, duke u pergatitur, gati, perfunduar.</p>
+        <div class="hero-badges">
+          <span class="pill pill-green"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-clock"></use></svg>07:30 - 13:00</span>
+          <span class="pill"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-wallet"></use></svg>Pagesa ne karte kantine</span>
+          <span class="pill"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-sparkle"></use></svg>Marrja ne hyrje te byfese</span>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <h3>Si funksionon</h3>
+        <div class="hero-line"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg><span>Zgjidh produktet dhe sasite</span></div>
+        <div class="hero-line"><svg class="icon" aria-hidden="true"><use href="#i-receipt"></use></svg><span>Shkruaj emrin dhe klasen</span></div>
+        <div class="hero-line"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg><span>Merr kodin e porosise</span></div>
+        <div class="hero-line"><svg class="icon" aria-hidden="true"><use href="#i-bell"></use></svg><span>Ndiq statusin derisa te jete gati</span></div>
+      </aside>
+    </div>
+
+    <div class="menu-toolbar">
+      <label class="search">
+        <span class="sr-only">Kerko produkt</span>
+        <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+        <input class="input" type="search" id="menuSearch" placeholder="Kerko: sandwich, leng, byrek..." autocomplete="off">
+      </label>
+      <span class="pill" id="menuSummary">Duke ngarkuar menune</span>
+    </div>
+
+    <div class="chips" id="categoryChips" role="tablist" aria-label="Kategorite e byfese"></div>
+
+    <div id="menuRoot" aria-live="polite"></div>
+  </section>
+
+  <section id="view-orders" class="hidden">
+    <div class="cat-head">
+      <span class="dot dot-green"><svg class="icon" aria-hidden="true"><use href="#i-receipt"></use></svg></span>
+      <div>
+        <h2>Porosia ime</h2>
+        <p>Ndiq statusin e porosise me kodin qe e more gjate porosites.</p>
+      </div>
+    </div>
+
+    <div class="card card-pad card-narrow">
+      <div class="field">
+        <label for="trackCode">Kodi i porosise</label>
+        <div class="row">
+          <input class="input grow" id="trackCode" placeholder="SB-261023-K7QM" autocomplete="off">
+          <button class="btn" type="button" id="trackBtn"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"></use></svg>Gjej</button>
+        </div>
+        <span class="tiny muted">Kodi gjendet ne recetaten elektronike te porosise.</span>
+      </div>
+    </div>
+
+    <div class="cat-head">
+      <span class="dot dot-orange"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg></span>
+      <div>
+        <h3>Porosite e ruajtur ne kete pajisje</h3>
+        <p>Permbledhje e porosive qe ke bere nga ky telefon ose kompjuter.</p>
+      </div>
+    </div>
+
+    <div id="myOrders" class="grid"></div>
+  </section>
+
+  <footer class="foot-note">
+    <span>SchoolBuffet · Byfeja Shkollore</span>
+    <span>Krijuar nga Olti Maxhuni dhe Leonis Rama</span>
+  </footer>
+</main>
+
+<aside class="drawer" id="cartDrawer" aria-label="Shporta e blerjeve">
+  <div class="drawer-head">
+    <div>
+      <h2>Shporta</h2>
+      <p class="tiny muted" id="cartHint">Asnje produkt ende</p>
+    </div>
+    <button class="btn btn-ghost btn-icon" type="button" id="closeCart" aria-label="Mbyll shporten">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+    </button>
+  </div>
+
+  <div class="drawer-body" id="cartBody"></div>
+
+  <div class="drawer-foot">
+    <div class="cart-total">
+      <span class="muted">Totali per pagese</span>
+      <b id="cartTotal">0 €</b>
+    </div>
+    <button class="btn btn-block" type="button" id="checkoutBtn" disabled>
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#i-check"></use></svg>
+      Perfundo porosine
+    </button>
+  </div>
+</aside>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="js/api.js"></script>
+<script src="js/format.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/student.js"></script>
+</body>
+</html>

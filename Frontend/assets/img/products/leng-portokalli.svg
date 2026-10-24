@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Leng portokalli">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8ee"/><stop offset="1" stop-color="#ffe9c9"/></linearGradient>
+    <linearGradient id="j" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb648"/><stop offset="1" stop-color="#f07f1c"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="250" rx="104" ry="14" fill="#e08a2e" opacity=".22"/>
+  <path d="M148 92h104l-12 130c-1 12-11 20-22 20h-36c-11 0-21-8-22-20z" fill="#ffffff" opacity=".65" stroke="#dfe6ea" stroke-width="4"/>
+  <path d="M156 132h88l-9 90c-1 8-7 12-14 12h-42c-7 0-13-4-14-12z" fill="url(#j)"/>
+  <rect x="196" y="60" width="12" height="90" rx="6" fill="#e2574a" transform="rotate(12 202 105)"/>
+  <g transform="translate(268 150)">
+    <circle r="34" fill="#f9a825"/><circle r="27" fill="#ffd54f"/>
+    <g stroke="#fff3c4" stroke-width="4"><path d="M0-27v54M-27 0h54M-19-19l38 38M-19 19l38-38"/></g>
+    <circle r="34" fill="none" stroke="#e08a2e" stroke-width="5"/>
+  </g>
+  <circle cx="126" cy="196" r="9" fill="#ffd54f" opacity=".85"/><circle cx="140" cy="214" r="6" fill="#ffd54f" opacity=".7"/>
+</svg>

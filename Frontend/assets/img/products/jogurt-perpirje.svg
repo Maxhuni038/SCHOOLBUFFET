@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Jogurt perpirje">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf7fb"/><stop offset="1" stop-color="#f3e3ef"/></linearGradient>
+    <linearGradient id="y" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7d9ea"/><stop offset="1" stop-color="#e8a8c9"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="250" rx="92" ry="14" fill="#c778a5" opacity=".2"/>
+  <path d="M166 74h68v20l12 18v106c0 14-11 24-25 24h-42c-14 0-25-10-25-24V112l12-18z" fill="#ffffff" stroke="#e6dfe5" stroke-width="4"/>
+  <path d="M172 148h56v70c0 10-8 16-18 16h-20c-10 0-18-6-18-16z" fill="url(#y)"/>
+  <rect x="160" y="164" width="80" height="40" rx="7" fill="#fff" opacity=".85"/>
+  <circle cx="200" cy="184" r="13" fill="#b5446f" opacity=".85"/>
+  <rect x="172" y="60" width="56" height="18" rx="7" fill="#b5446f"/>
+  <path d="M118 200c-14-8-22-22-22-34 0-14 12-22 24-14 8 6 10 24-2 48z" fill="#e8a8c9" opacity=".7"/>
+  <circle cx="290" cy="128" r="9" fill="#b5446f" opacity=".7"/><circle cx="306" cy="150" r="6" fill="#b5446f" opacity=".5"/>
+</svg>

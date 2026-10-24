@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paneli i Administrimit · SchoolBuffet</title>
+<meta name="description" content="Paneli i administrimit per byfejen shkollore: produktet, kategorite, porosite dhe shitjet.">
+<meta name="theme-color" content="#1f6b41">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+<div class="login-wrap" id="loginScreen">
+  <form class="login-card" id="loginForm" autocomplete="on">
+    <span class="brand-mark"><svg class="icon icon-lg" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+    <h1>Paneli i administrimit</h1>
+    <p class="muted tiny">Byfeja Shkollore · SchoolBuffet</p>
+
+    <div class="field">
+      <label for="Username">Perdoruesi</label>
+      <input class="input" id="Username" name="Username" autocomplete="username" spellcheck="false" required>
+      <span class="field-error"></span>
+    </div>
+
+    <div class="field">
+      <label for="Password">Fjalakalimi</label>
+      <input class="input" id="Password" name="Password" type="password" autocomplete="current-password" required>
+      <span class="field-error"></span>
+    </div>
+
+    <button class="btn btn-block" type="submit" id="loginBtn">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#i-logout"></use></svg>
+      Hyr ne panel
+    </button>
+
+    <p class="tiny muted center mt">Kjo faqe nuk ka akses per studentet. Hyrja mbetet e mbyllur pas 8 perpjekesh brenda nje minute.</p>
+  </form>
+</div>
+
+<div class="app-shell hidden" id="appShell">
+  <aside class="side" id="side">
+    <div class="brand">
+      <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-school"></use></svg></span>
+      <span>Byfeja Shkollore<small>Paneli Admin</small></span>
+    </div>
+
+    <nav class="side-nav" aria-label="Menyja e panelit">
+      <button class="side-link active" type="button" data-view="dashboard">
+        <svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>Boardi
+      </button>
+      <button class="side-link" type="button" data-view="orders">
+        <svg class="icon" aria-hidden="true"><use href="#i-receipt"></use></svg>Porosite
+        <span class="badge hidden" id="openOrdersBadge">0</span>
+      </button>
+      <button class="side-link" type="button" data-view="products">
+        <svg class="icon" aria-hidden="true"><use href="#i-sandwich"></use></svg>Produktet
+      </button>
+      <button class="side-link" type="button" data-view="categories">
+        <svg class="icon" aria-hidden="true"><use href="#i-tag"></use></svg>Kategorite
+      </button>
+      <button class="side-link" type="button" data-view="sales">
+        <svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg>Shitjet
+      </button>
+      <button class="side-link" type="button" data-view="settings">
+        <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>Cilesite
+      </button>
+    </nav>
+
+    <div class="side-foot">
+      <a class="side-link" href="index.html">
+        <svg class="icon" aria-hidden="true"><use href="#i-cart"></use></svg>Menyja per studentet
+      </a>
+      <div class="side-user">
+        <span class="avatar" id="userInitial">A</span>
+        <span class="grow"><b id="userName">Administrator</b>
+        <small class="tiny" id="userRole">Admin</small></span>
+      </div>
+      <button class="btn side-logout btn-block btn-sm" type="button" id="logoutBtn">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-logout"></use></svg>
+        Dil nga paneli
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="main-head">
+      <button class="btn btn-ghost btn-icon burger" type="button" id="burger" aria-label="Hap menuane">
+        <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+      </button>
+      <div>
+        <h1 id="viewTitle">Boardi</h1>
+        <p id="viewSub">Duke ngarkuar te dhenat</p>
+      </div>
+      <div class="main-actions" id="viewActions"></div>
+    </div>
+
+    <div id="viewRoot"></div>
+  </main>
+</div>
+
+<div class="side-scrim" id="sideScrim"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="js/api.js"></script>
+<script src="js/format.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/admin-core.js"></script>
+<script src="js/admin-dashboard.js"></script>
+<script src="js/admin-orders.js"></script>
+<script src="js/admin-catalog.js"></script>
+<script src="js/admin-reports.js"></script>
+</body>
+</html>

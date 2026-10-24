@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Snack perimesh">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6fdf4"/><stop offset="1" stop-color="#dff3dc"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="248" rx="118" ry="15" fill="#4f8f52" opacity=".2"/>
+  <path d="M126 138h148l-12 88c-2 12-12 20-24 20h-76c-12 0-22-8-24-20z" fill="#ffffff" opacity=".75" stroke="#dbe6dc" stroke-width="4"/>
+  <g>
+    <rect x="146" y="112" width="18" height="80" rx="9" fill="#8bc34a" transform="rotate(-12 155 152)"/>
+    <rect x="182" y="104" width="18" height="88" rx="9" fill="#7cb342" transform="rotate(4 191 148)"/>
+    <rect x="218" y="110" width="18" height="82" rx="9" fill="#9ccc65" transform="rotate(14 227 151)"/>
+    <rect x="252" y="122" width="16" height="70" rx="8" fill="#aed581" transform="rotate(22 260 157)"/>
+  </g>
+  <circle cx="164" cy="196" r="17" fill="#e2574a"/><circle cx="206" cy="204" r="15" fill="#ef6c55"/><circle cx="246" cy="196" r="13" fill="#e2574a"/>
+  <path d="M164 180c-2-8 4-14 12-12 2 8-4 14-12 12z" fill="#4f8f52"/>
+  <path d="M130 158c44 14 96 14 140 0" fill="none" stroke="#cfe8cf" stroke-width="6"/>
+  <ellipse cx="200" cy="238" rx="86" ry="8" fill="#8fae8f" opacity=".25"/>
+</svg>

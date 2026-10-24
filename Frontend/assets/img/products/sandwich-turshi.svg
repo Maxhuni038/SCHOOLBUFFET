@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Sandwich me turshi">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7fbf5"/><stop offset="1" stop-color="#e5f2e2"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="238" rx="138" ry="18" fill="#5fa85a" opacity=".16"/>
+  <path d="M96 210 190 108l14 102z" fill="#cfa368"/>
+  <path d="M96 210 190 108l7 52-101 50z" fill="#e6c48c"/>
+  <path d="M204 210 298 108l14 102z" fill="#cfa368"/>
+  <path d="M298 210 204 108l-7 52 101 50z" fill="#e6c48c"/>
+  <path d="M110 196c26-8 52 6 78-4" stroke="#5fa85a" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <path d="M206 196c26-8 52 6 78-4" stroke="#5fa85a" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <circle cx="146" cy="172" r="12" fill="#e2574a"/><circle cx="262" cy="172" r="12" fill="#e2574a"/>
+  <path d="M120 178c22-6 46 4 68-2" stroke="#f6efe0" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M216 178c22-6 46 4 68-2" stroke="#f6efe0" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="170" cy="128" r="4" fill="#8a6b3f"/><circle cx="240" cy="128" r="4" fill="#8a6b3f"/>
+</svg>

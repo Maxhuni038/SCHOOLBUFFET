@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Keks me shokollate">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf6f2"/><stop offset="1" stop-color="#f6e2d8"/></linearGradient>
+    <linearGradient id="c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a3b"/><stop offset="1" stop-color="#5d3a26"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="246" rx="120" ry="15" fill="#6b4430" opacity=".2"/>
+  <path d="M110 210 128 118h144l18 92z" fill="#e7c9a5"/>
+  <path d="M118 178h164l6 32H112z" fill="#f3e3cc"/>
+  <path d="M128 118h144l6 34H122z" fill="url(#c)"/>
+  <path d="M122 152c24 12 48-8 72 4s50-10 74 2" fill="none" stroke="#5d3a26" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#fff8f0" opacity=".85"><circle cx="150" cy="132" r="6"/><circle cx="200" cy="126" r="7"/><circle cx="250" cy="134" r="6"/></g>
+  <path d="M110 210h180" stroke="#c9a279" stroke-width="6" stroke-linecap="round"/>
+  <g fill="#8a5a3b"><rect x="290" y="150" width="34" height="12" rx="5" transform="rotate(-20 307 156)"/><rect x="300" y="176" width="30" height="12" rx="5" transform="rotate(15 315 182)"/></g>
+  <path d="M96 108c8-10 22-10 30 0" fill="none" stroke="#d9bba0" stroke-width="6" stroke-linecap="round"/>
+</svg>

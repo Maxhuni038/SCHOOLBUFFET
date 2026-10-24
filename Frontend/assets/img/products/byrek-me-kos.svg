@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Byrek me kos">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#f8e8c6"/></linearGradient>
+    <linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d79a"/><stop offset="1" stop-color="#d9a758"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="244" rx="140" ry="16" fill="#c9924e" opacity=".2"/>
+  <path d="M84 214 200 96l116 118z" fill="url(#p)"/>
+  <path d="M84 214 200 96l58 59z" fill="#efc882" opacity=".8"/>
+  <g stroke="#b8813c" stroke-width="4" fill="none" opacity=".7">
+    <path d="M112 200c30-22 58-46 88-70"/><path d="M136 212c26-18 52-38 78-58"/>
+  </g>
+  <path d="M104 214c60 12 132 12 192 0" fill="none" stroke="#a56f2d" stroke-width="6"/>
+  <g fill="#4f8f52"><path d="M160 168c10-12 26-8 30 4-12 10-26 6-30-4z"/><path d="M212 190c10-12 26-8 30 4-12 10-26 6-30-4z"/></g>
+  <circle cx="288" cy="132" r="26" fill="#fff" stroke="#e4e9ee" stroke-width="4"/>
+  <path d="M266 138c14 8 30 8 44 0" fill="none" stroke="#dfe6ea" stroke-width="5"/>
+  <circle cx="118" cy="120" r="6" fill="#f7e6c4"/><circle cx="132" cy="106" r="4" fill="#f7e6c4"/>
+</svg>

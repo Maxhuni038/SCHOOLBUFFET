@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Uje natyrale">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2fbff"/><stop offset="1" stop-color="#dcf1fb"/></linearGradient>
+    <linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe7f7"/><stop offset="1" stop-color="#7cc5e8"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="250" rx="96" ry="14" fill="#4b9bc4" opacity=".2"/>
+  <path d="M162 66h76v18l14 22v112c0 12-10 22-22 22h-60c-12 0-22-10-22-22V106l14-22z" fill="#e9f7fd" stroke="#a9d6ea" stroke-width="4"/>
+  <path d="M168 140h64v78c0 8-8 14-18 14h-28c-10 0-18-6-18-14z" fill="url(#w)"/>
+  <rect x="156" y="150" width="88" height="44" rx="8" fill="#ffffff" opacity=".9"/>
+  <path d="M186 84h28v14h-28z" fill="#3f8fbf"/>
+  <rect x="176" y="52" width="48" height="18" rx="7" fill="#2f7fb2"/>
+  <path d="M198 112c-12 18-18 28-18 36a18 18 0 0 0 36 0c0-8-6-18-18-36z" fill="#8fd2ee" opacity=".8"/>
+  <circle cx="184" cy="196" r="5" fill="#ffffff" opacity=".8"/><circle cx="214" cy="182" r="4" fill="#ffffff" opacity=".7"/>
+</svg>

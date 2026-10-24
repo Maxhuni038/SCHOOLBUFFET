@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Ushqim i ftohte familjar">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f9ff"/><stop offset="1" stop-color="#ddeefb"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="250" rx="140" ry="15" fill="#4a7fa8" opacity=".18"/>
+  <rect x="72" y="118" width="256" height="106" rx="20" fill="#ffffff" stroke="#cddcea" stroke-width="5"/>
+  <path d="M196 118v106" stroke="#cddcea" stroke-width="5"/>
+  <path d="M72 196h124" stroke="#cddcea" stroke-width="5"/>
+  <path d="M84 132h96v52H84z" fill="#f6e7b8"/>
+  <g fill="#e8d49a"><circle cx="104" cy="150" r="5"/><circle cx="130" cy="162" r="5"/><circle cx="156" cy="146" r="5"/><circle cx="118" cy="172" r="4"/></g>
+  <path d="M212 132h104v52H212z" fill="#8fb8d8" opacity=".5"/>
+  <g fill="#8a5a3b"><path d="M226 148c18-12 42-12 60 0 6 16-8 30-30 30s-36-14-30-30z"/></g>
+  <g fill="#4f8f52"><path d="M96 200c26-8 52 4 78-4"/><path d="M92 212c30-6 60 6 88-2" opacity=".7"/></g>
+  <path d="M244 108c0-10 10-16 22-16s22 6 22 16" fill="none" stroke="#9fb8cf" stroke-width="5"/>
+  <g fill="#e2574a"><circle cx="240" cy="206" r="9"/><circle cx="266" cy="212" r="7"/><circle cx="292" cy="202" r="8"/></g>
+</svg>

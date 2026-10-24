@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Toste me pishit dhe banana">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#fbeed2"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2c879"/><stop offset="1" stop-color="#d38f3e"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="240" rx="140" ry="17" fill="#c98b45" opacity=".18"/>
+  <rect x="86" y="150" width="228" height="76" rx="18" fill="url(#g)"/>
+  <rect x="86" y="150" width="228" height="26" rx="13" fill="#e7b465"/>
+  <path d="M92 226c56 14 160 14 216 0" fill="none" stroke="#a9662c" stroke-width="6"/>
+  <rect x="100" y="166" width="200" height="16" rx="8" fill="#c98b4a" opacity=".7"/>
+  <g fill="#f7e08a" stroke="#d8b84e" stroke-width="3">
+    <ellipse cx="132" cy="150" rx="26" ry="15"/><ellipse cx="200" cy="144" rx="26" ry="15"/><ellipse cx="268" cy="150" rx="26" ry="15"/>
+  </g>
+  <g fill="#fff6d8"><circle cx="132" cy="150" r="6"/><circle cx="200" cy="144" r="6"/><circle cx="268" cy="150" r="6"/></g>
+  <path d="M112 250c34 12 132 12 176 0" fill="none" stroke="#8a5a2b" stroke-width="5" opacity=".35"/>
+</svg>

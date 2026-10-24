@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Sandwich me pule">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6ea"/><stop offset="1" stop-color="#ffe6c9"/></linearGradient>
+    <linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c98a"/><stop offset="1" stop-color="#d99f52"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="236" rx="132" ry="18" fill="#c98b45" opacity=".18"/>
+  <path d="M74 178c0-14 12-22 30-22h192c18 0 30 8 30 22v14c0 12-10 20-26 20H100c-16 0-26 8-26 20z" fill="#e8b876"/>
+  <path d="M74 196c0 16 14 26 34 26h184c20 0 34-10 34-26" fill="none" stroke="#c9924e" stroke-width="6"/>
+  <path d="M84 152c40-30 192-30 232 0-14 12-46 18-116 18s-102-6-116-18z" fill="url(#t)"/>
+  <circle cx="150" cy="142" r="5" fill="#fff2d6"/><circle cx="196" cy="136" r="5" fill="#fff2d6"/><circle cx="242" cy="142" r="5" fill="#fff2d6"/>
+  <path d="M92 176c22-16 44 8 66-6s44 10 66-4 44 10 66-4 26 6 26 6v14H92z" fill="#5fa85a"/>
+  <circle cx="140" cy="182" r="16" fill="#e2574a"/><circle cx="214" cy="180" r="16" fill="#e2574a"/><circle cx="280" cy="184" r="14" fill="#e2574a"/>
+  <rect x="112" y="196" width="176" height="18" rx="9" fill="#f0e2c4"/>
+  <path d="M118 208c30 12 134 12 164 0" fill="none" stroke="#d9c49a" stroke-width="5"/>
+</svg>

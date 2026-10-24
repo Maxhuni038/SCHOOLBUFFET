@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Panini me perime">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5fbf6"/><stop offset="1" stop-color="#dff0dd"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="26" fill="url(#b)"/>
+  <ellipse cx="200" cy="242" rx="140" ry="17" fill="#4f8f52" opacity=".18"/>
+  <path d="M78 168c0-20 16-32 40-32h164c24 0 40 12 40 32v10H78z" fill="#e7c98f"/>
+  <path d="M78 196c0 20 16 32 40 32h164c24 0 40-12 40-32v-8H78z" fill="#dcb978"/>
+  <g stroke="#a97c3c" stroke-width="7" stroke-linecap="round" opacity=".75">
+    <path d="M110 150h180"/><path d="M110 168h180"/>
+  </g>
+  <path d="M92 188c40-10 76 8 118-2s66 8 98-2" fill="none" stroke="#5aa45c" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="140" cy="188" r="14" fill="#e2574a"/><circle cx="206" cy="186" r="14" fill="#e2574a"/><circle cx="268" cy="190" r="12" fill="#e2574a"/>
+  <path d="M120 206c44 10 122 10 166 0" fill="none" stroke="#f0dcae" stroke-width="9" stroke-linecap="round"/>
+  <ellipse cx="200" cy="216" rx="98" ry="10" fill="#b7863f" opacity=".2"/>
+</svg>
