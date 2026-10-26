@@ -124,6 +124,8 @@
     var settings = options || {};
 
     return new Promise(function (resolve) {
+      var confirmed = false;
+
       var handle = SB.modal({
         title: settings.title || 'Konfirmo veprimin',
         html: '<p>' + SB.esc(settings.text || 'Je i sigurt per kete veprim?') + '</p>',
@@ -132,14 +134,11 @@
           { id: 'yes', label: settings.okLabel || 'Po, vijolo', className: settings.danger ? 'btn-danger' : '' }
         ],
         onClose: function () {
-          resolve(false);
+          resolve(confirmed);
         },
         onAction: function (id) {
+          confirmed = id === 'yes';
           handle.close();
-
-          if (id === 'yes') {
-            resolve(true);
-          }
         }
       });
     });
