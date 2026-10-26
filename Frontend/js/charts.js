@@ -64,6 +64,6 @@
   SB.charts.meter = function (host, value, total, color) {
     var percent = total > 0 ? Math.round((value / total) * 100) : 0;
     host.style.width = percent + '%';
-    host.style.background = color || 'var(--green-600)';
+    host.style.background = color || 'var(--brand)';
   };
 })(window);

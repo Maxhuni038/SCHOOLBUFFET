@@ -149,14 +149,14 @@
   };
 
   var STATUS_META = {
-    NePritje: { label: 'Ne pritje', pill: 'pill-amber', icon: 'clock', color: '#c98a17' },
-    DukeUPergatitur: { label: 'Duke u pergatitur', pill: 'pill-blue', icon: 'pot', color: '#2b7fd0' },
-    Gati: { label: 'Gati', pill: 'pill-green', icon: 'bell', color: '#2f8f5b' },
-    Perfunduar: { label: 'Perfunduar', pill: 'pill-pink', icon: 'check-circle', color: '#b5446f' }
+    NePritje: { label: 'Ne pritje', pill: 'pill-amber', icon: 'clock', color: '#f5a524' },
+    DukeUPergatitur: { label: 'Duke u pergatitur', pill: 'pill-blue', icon: 'pot', color: '#4f7cff' },
+    Gati: { label: 'Gati', pill: 'pill-green', icon: 'bell', color: '#16c79a' },
+    Perfunduar: { label: 'Perfunduar', pill: 'pill-pink', icon: 'check-circle', color: '#8f7bff' }
   };
 
   SB.statusMeta = function (key) {
-    return STATUS_META[key] || { label: key || 'Pa status', pill: 'pill', icon: 'clock', color: '#6f887c' };
+    return STATUS_META[key] || { label: key || 'Pa status', pill: 'pill', icon: 'clock', color: '#8b95ac' };
   };
 
   SB.statusFlow = ['NePritje', 'DukeUPergatitur', 'Gati', 'Perfunduar'];

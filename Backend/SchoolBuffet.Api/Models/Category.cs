@@ -8,7 +8,7 @@ public class Category
 
     public string Icon { get; set; } = "sandwich";
 
-    public string AccentColor { get; set; } = "#2f8f5b";
+    public string AccentColor { get; set; } = "#6c5ce7";
 
     public string Description { get; set; } = string.Empty;
 

@@ -424,7 +424,7 @@
     var current = category || {
       name: '',
       icon: 'snack',
-      accentColor: '#2f8f5b',
+      accentColor: '#6c5ce7',
       description: '',
       sortOrder: categories.list.length + 1,
       isActive: true
@@ -475,7 +475,7 @@
     });
 
     var color = handle.root.querySelector('#CatColorPick');
-    color.value = /^[#][0-9a-fA-F]{6}$/.test(category ? category.accentColor : '') ? category.accentColor : '#2f8f5b';
+    color.value = /^[#][0-9a-fA-F]{6}$/.test(category ? category.accentColor : '') ? category.accentColor : '#6c5ce7';
 
     color.addEventListener('input', function () {
       handle.root.querySelector('#CatColor').value = color.value;

@@ -97,11 +97,11 @@
     var today = SB.dayKey(0);
 
     host.innerHTML = '<div class="kpis">' +
-      kpi('kpi-green', 'wallet', 'Te ardhurat sot', SB.moneyStrict(summary.revenueToday),
+      kpi('kpi-hero', 'wallet', 'Te ardhurat sot', SB.moneyStrict(summary.revenueToday),
         SB.moneyStrict(summary.averageOrderToday) + ' / porosi') +
       kpi('kpi-orange', 'receipt', 'Porosi sot', SB.number(summary.ordersToday),
         SB.number(summary.itemsToday) + ' artikuj') +
-      kpi('kpi-blue', 'trend', 'Te ardhurat gjithsej', SB.moneyStrict(summary.revenueAll),
+      kpi('kpi-brand', 'trend', 'Te ardhurat gjithsej', SB.moneyStrict(summary.revenueAll),
         SB.number(summary.ordersAll) + ' porosi') +
       kpi('kpi-amber', 'clock', 'Porosi aktive', SB.number(openCount(summary)),
         'Ne pritje, pergatitje ose gati') +

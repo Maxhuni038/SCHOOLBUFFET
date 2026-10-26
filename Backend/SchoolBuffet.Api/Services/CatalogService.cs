@@ -223,7 +223,7 @@ public sealed class CatalogService
                 x.CategoryId,
                 x.Category?.Name ?? string.Empty,
                 x.Category?.Icon ?? "snack",
-                x.Category?.AccentColor ?? "#2f8f5b",
+                x.Category?.AccentColor ?? "#6c5ce7",
                 x.Name,
                 x.Description,
                 x.Price,
@@ -364,7 +364,7 @@ public sealed class CatalogService
             product.CategoryId,
             product.Category?.Name ?? string.Empty,
             product.Category?.Icon ?? "snack",
-            product.Category?.AccentColor ?? "#2f8f5b",
+            product.Category?.AccentColor ?? "#6c5ce7",
             product.Name,
             product.Description,
             product.Price,
@@ -404,6 +404,6 @@ public sealed class CatalogService
     {
         string color = (value ?? string.Empty).Trim().ToLowerInvariant();
         bool valid = color.Length == 7 && color[0] == '#' && color[1..].All(Uri.IsHexDigit);
-        return valid ? color : "#2f8f5b";
+        return valid ? color : "#6c5ce7";
     }
 }

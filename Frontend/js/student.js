@@ -8,12 +8,13 @@
   var MAX_LINES = 25;
 
   var TONES = {
-    '#e07b39': 'dot-orange',
-    '#2b7fd0': 'dot-blue',
-    '#2f8f5b': 'dot-green',
-    '#b5446f': 'dot-pink',
-    '#c98a17': 'dot-amber',
-    '#cf4b3f': 'dot-red'
+    '#6c5ce7': 'dot-violet',
+    '#4f7cff': 'dot-blue',
+    '#16c79a': 'dot-green',
+    '#8f7bff': 'dot-pink',
+    '#f5a524': 'dot-amber',
+    '#3ec9d7': 'dot-orange',
+    '#f0426b': 'dot-red'
   };
 
   var dom = {

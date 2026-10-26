@@ -8,10 +8,10 @@ public sealed class DbSeeder
 {
     private static readonly (string Name, string Icon, string Color, string Description)[] CategorySeed =
     {
-        ("Sandwicha", "sandwich", "#e07b39", "Sandwich dhe toste te fresket, pergatiten per 3 minuta"),
-        ("Pije", "drink", "#2b7fd0", "Uje, lengje dhe pije te ftohta pa alkool"),
-        ("Ushqime", "food", "#2f8f5b", "Byrek, perime dhe ushqim i ngrohte per dreken"),
-        ("Embelsira", "dessert", "#b5446f", "Keks, muffin dhe embelsira te lehta per pushimin")
+        ("Sandwicha", "sandwich", "#f5a524", "Sandwich dhe toste te fresket, pergatiten per 3 minuta"),
+        ("Pije", "drink", "#4f7cff", "Uje, lengje dhe pije te ftohta pa alkool"),
+        ("Ushqime", "food", "#16c79a", "Byrek, perime dhe ushqim i ngrohte per dreken"),
+        ("Embelsira", "dessert", "#8f7bff", "Keks, muffin dhe embelsira te lehta per pushimin")
     };
 
     private static readonly (string Name, string Description, decimal Price, string Image, string Badge, bool Recommended)[] ProductSeed =
