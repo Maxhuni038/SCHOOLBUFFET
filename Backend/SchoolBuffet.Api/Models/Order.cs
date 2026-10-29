@@ -20,11 +20,17 @@ public class Order
 
     public DateTime UpdatedAtUtc { get; set; }
 
+    public DateTime? PreparingAtUtc { get; set; }
+
+    public DateTime? ReadyAtUtc { get; set; }
+
     public DateTime? CompletedAtUtc { get; set; }
 
     public int? MarkedByUserId { get; set; }
 
     public User? MarkedByUser { get; set; }
+
+    public Payment? Payment { get; set; }
 
     public List<OrderItem> Items { get; set; } = new();
 }

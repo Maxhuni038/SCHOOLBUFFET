@@ -19,10 +19,25 @@
     userRole: document.getElementById('userRole'),
     userInitial: document.getElementById('userInitial'),
     badge: document.getElementById('openOrdersBadge'),
-    logoutBtn: document.getElementById('logoutBtn')
+    logoutBtn: document.getElementById('logoutBtn'),
+    liveChip: document.getElementById('liveChip'),
+    liveChipText: document.getElementById('liveChipText')
   };
 
   A.me = null;
+  A.onReload = null;
+
+  A.canManage = function () {
+    return !!A.me && (A.me.role === 'Admin' || A.me.role === 'Staff');
+  };
+
+  A.canCatalog = function () {
+    return !!A.me && A.me.role === 'Admin';
+  };
+
+  A.defineReload = function (handler) {
+    A.onReload = handler;
+  };
 
   A.skeleton = function (blocks) {
     var card = '<div class="card card-pad"><div class="skeleton" aria-hidden="true"></div>' +
@@ -57,7 +72,7 @@
   A.setActions = function (list) {
     A.actions = {};
 
-    A.dom.viewActions.innerHTML = (list || []).map(function (item) {
+    A.dom.viewActions.innerHTML = (list || []).filter(Boolean).map(function (item) {
       A.actions[item.id] = item.onClick;
 
       return '<button class="btn ' + (item.className || '') + '" type="button" data-act="' + SB.esc(item.id) + '">' +
@@ -73,6 +88,9 @@
     A.dom.shell.classList.add('hidden');
     A.dom.loginScreen.classList.remove('hidden');
     A.me = null;
+    A.onReload = null;
+    SB.realtime.disconnect();
+    A.setLive('off', 'Duhet te hyresh per te marre ndryshimet ne kohe reale.');
 
     var field = document.getElementById('Username');
 
@@ -105,6 +123,7 @@
     });
 
     closeSide();
+    A.onReload = null;
     A.dom.viewTitle.textContent = view.title;
     A.dom.viewSub.textContent = view.loadingText || 'Duke ngarkuar te dhenat';
     A.dom.viewActions.innerHTML = '';
@@ -177,6 +196,60 @@
     });
   }
 
+  function applySession(user) {
+    A.me = user;
+    A.dom.userName.textContent = user.fullName;
+    A.dom.userRole.textContent = user.roleLabel || user.role;
+    A.dom.userInitial.textContent = String(user.fullName || 'A').charAt(0).toUpperCase();
+  }
+
+  A.setLive = function (kind, note) {
+    if (!A.dom.liveChip) {
+      return;
+    }
+
+    A.dom.liveChip.classList.remove('is-live', 'is-warn', 'is-down');
+    A.dom.liveChip.classList.add(kind === 'live' ? 'is-live' : kind === 'off' ? 'is-down' : 'is-warn');
+    A.dom.liveChipText.textContent = kind === 'live' ? 'Direkt' : kind === 'off' ? 'Pa lidhje' : 'Rifreskim';
+
+    if (note) {
+      A.dom.liveChip.title = note;
+    }
+  };
+
+  var liveReload = SB.debounce(function () {
+    if (!A.me) {
+      return;
+    }
+
+    if (A.onReload) {
+      A.onReload();
+    }
+
+    A.refreshBadge();
+  }, 500);
+
+  function startRealtime() {
+    SB.realtime.on(function (signal) {
+      if (signal.kind === 'lidhje') {
+        A.setLive(signal.statusKey, 'Lidhja me serverin per ndryshimet ne kohe reale.');
+        return;
+      }
+
+      liveReload();
+    });
+
+    SB.realtime.connect({ url: 'api/realtime/stream', pollMs: 8000 });
+  }
+
+  function enterPanel(user) {
+    applySession(user);
+    showShell();
+    startRealtime();
+    A.setView(global.location.hash.replace('#', '') || 'dashboard');
+    A.refreshBadge();
+  }
+
   function bindLogin() {
     A.dom.loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
@@ -190,11 +263,14 @@
       }).then(function (user) {
         SB.busy(button, false);
         A.dom.loginForm.reset();
-        applySession(user);
-        showShell();
+
+        if (user.panel && user.panel !== 'admin') {
+          global.location.replace('kitchen.html');
+          return;
+        }
+
+        enterPanel(user);
         SB.toast('Hyrja u krye. Paneli eshte gati per pune.', 'success');
-        A.setView(global.location.hash.replace('#', '') || 'dashboard');
-        A.refreshBadge();
       }).catch(function (error) {
         SB.busy(button, false);
 
@@ -207,28 +283,29 @@
     });
   }
 
-  function applySession(user) {
-    A.me = user;
-    A.dom.userName.textContent = user.fullName;
-    A.dom.userRole.textContent = user.role === 'Admin' ? 'Administrator' : user.role;
-    A.dom.userInitial.textContent = String(user.fullName || 'A').charAt(0).toUpperCase();
-  }
-
   function boot() {
     bindShell();
     bindLogin();
+    A.setLive('off', 'Duke kontrolluar sesionin.');
 
     SB.icons().then(function () {
       SB.api.get('api/auth/me').then(function (user) {
-        applySession(user);
-        showShell();
-        A.setView(global.location.hash.replace('#', '') || 'dashboard');
-        A.refreshBadge();
+        if (user.panel && user.panel !== 'admin') {
+          global.location.replace('kitchen.html');
+          return;
+        }
+
+        enterPanel(user);
+
         setInterval(function () {
           if (!document.hidden) {
             A.refreshBadge();
+
+            if (SB.realtime.state() !== 'live') {
+              liveReload();
+            }
           }
-        }, 90000);
+        }, 60000);
       }).catch(function () {
         showLogin();
       });

@@ -14,22 +14,22 @@ public sealed class DbSeeder
         ("Embelsira", "dessert", "#8f7bff", "Keks, muffin dhe embelsira te lehta per pushimin")
     };
 
-    private static readonly (string Name, string Description, decimal Price, string Image, string Badge, bool Recommended)[] ProductSeed =
+    private static readonly (string Name, string Description, decimal Price, string Image, string Badge, bool Recommended, int Stock)[] ProductSeed =
     {
-        ("Sandwich Me Pule", "Buke e bute me pule te pjekur, sallatame dhe domate", 1.50m, "sandwich-pule.svg", "Me e kerkuara", true),
-        ("Sandwich Me Turshi", "Turshi, kos dhe perime te freska ne buke", 1.30m, "sandwich-turshi.svg", string.Empty, false),
-        ("Toste Me Mjalt dhe Banana", "Toste e ngrohte me mjalt dhe banana", 1.00m, "toste-pishit-banane.svg", string.Empty, false),
-        ("Panini Me Perime", "Panini me perime te pjekura dhe ullinj", 1.10m, "panini-perime.svg", "Vegetariane", false),
-        ("Uje Natyrale 0.33 L", "Uje per pirje ne shishe te vogel", 0.40m, "uje-natyrale.svg", string.Empty, false),
-        ("Leng Portokalli 0.25 L", "Leng portokalli me 100 perqind frutor", 0.70m, "leng-portokalli.svg", "Pa sheqer te shtuar", true),
-        ("Leng Molle 0.25 L", "Leng molle i fresket pa gaz", 0.70m, "leng-molle.svg", string.Empty, false),
-        ("Jogurt Per Pirje 0.2 L", "Jogurt i fresket per pirje me fruta", 0.60m, "jogurt-perpirje.svg", string.Empty, false),
-        ("Byrek Me Kos", "Byrek i pjekur me kos dhe spinaq", 0.90m, "byrek-me-kos.svg", "I ngrohte", true),
-        ("Snack Perimesh", "Pakete me domate, kastravec dhe spek", 0.70m, "snack-perimesh.svg", "Vegetariane", false),
-        ("Ushqim i Ftohte Familjar", "Vakt me perime, oriz dhe mish", 1.80m, "ushqim-ftohte-familjar.svg", string.Empty, false),
-        ("Keks Me Shokollate", "Pese keku me cope shokollate", 0.50m, "keks-me-shokollate.svg", string.Empty, false),
-        ("Muffin Me Arra", "Muffin i fresket me arra dhe miell", 0.60m, "muffin-me-arra.svg", string.Empty, false),
-        ("Biskota Me Sjere Natyrale", "Biskota me mjalt dhe drithera", 0.45m, "biskota-me-sjere.svg", string.Empty, false)
+        ("Sandwich Me Pule", "Buke e bute me pule te pjekur, sallatame dhe domate", 1.50m, "sandwich-pule.svg", "Me e kerkuara", true, 60),
+        ("Sandwich Me Turshi", "Turshi, kos dhe perime te freska ne buke", 1.30m, "sandwich-turshi.svg", string.Empty, false, 40),
+        ("Toste Me Mjalt dhe Banana", "Toste e ngrohte me mjalt dhe banana", 1.00m, "toste-pishit-banane.svg", string.Empty, false, 45),
+        ("Panini Me Perime", "Panini me perime te pjekura dhe ullinj", 1.10m, "panini-perime.svg", "Vegetariane", false, 35),
+        ("Uje Natyrale 0.33 L", "Uje per pirje ne shishe te vogel", 0.40m, "uje-natyrale.svg", string.Empty, false, 120),
+        ("Leng Portokalli 0.25 L", "Leng portokalli me 100 perqind frutor", 0.70m, "leng-portokalli.svg", "Pa sheqer te shtuar", true, 70),
+        ("Leng Molle 0.25 L", "Leng molle i fresket pa gaz", 0.70m, "leng-molle.svg", string.Empty, false, 65),
+        ("Jogurt Per Pirje 0.2 L", "Jogurt i fresket per pirje me fruta", 0.60m, "jogurt-perpirje.svg", string.Empty, false, 50),
+        ("Byrek Me Kos", "Byrek i pjekur me kos dhe spinaq", 0.90m, "byrek-me-kos.svg", "I ngrohte", true, 55),
+        ("Snack Perimesh", "Pakete me domate, kastravec dhe spek", 0.70m, "snack-perimesh.svg", "Vegetariane", false, 30),
+        ("Ushqim i Ftohte Familjar", "Vakt me perime, oriz dhe mish", 1.80m, "ushqim-ftohte-familjar.svg", string.Empty, false, 25),
+        ("Keks Me Shokollate", "Pese keku me cope shokollate", 0.50m, "keks-me-shokollate.svg", string.Empty, false, 80),
+        ("Muffin Me Arra", "Muffin i fresket me arra dhe miell", 0.60m, "muffin-me-arra.svg", string.Empty, false, 48),
+        ("Biskota Me Sjere Natyrale", "Biskota me mjalt dhe drithera", 0.45m, "biskota-me-sjere.svg", string.Empty, false, 90)
     };
 
     private static readonly string[] StudentNames =
@@ -60,37 +60,74 @@ public sealed class DbSeeder
     public async Task<SeedResult> SeedAsync()
     {
         SeedResult result = new();
-        result.AdminPassword = await EnsureAdminAsync();
+        await EnsureUsersAsync(result);
         await EnsureCategoriesAsync();
         await EnsureProductsAsync();
         result.DemoOrdersCreated = await EnsureDemoOrdersAsync();
         return result;
     }
 
-    private async Task<string?> EnsureAdminAsync()
+    private async Task EnsureUsersAsync(SeedResult result)
     {
-        if (await _db.Users.AnyAsync())
+        List<User> existing = await _db.Users.ToListAsync();
+
+        if (!existing.Any(x => string.Equals(x.Role, AppRoles.Admin, StringComparison.OrdinalIgnoreCase)))
         {
+            string username = string.IsNullOrWhiteSpace(_settings.AdminUsername) ? "admin" : _settings.AdminUsername.Trim();
+            result.AdminPassword = await CreateUserAsync(
+                existing,
+                username,
+                string.IsNullOrWhiteSpace(_settings.AdminFullName) ? "Administrator i Byfese" : _settings.AdminFullName,
+                AppRoles.Admin,
+                _settings.AdminPassword);
+        }
+
+        if (!existing.Any(x => string.Equals(x.Role, AppRoles.Staff, StringComparison.OrdinalIgnoreCase)))
+        {
+            result.StaffPassword = await CreateUserAsync(
+                existing,
+                _settings.StaffUsername,
+                _settings.StaffFullName,
+                AppRoles.Staff,
+                _settings.StaffPassword);
+        }
+
+        if (!existing.Any(x => string.Equals(x.Role, AppRoles.Kitchen, StringComparison.OrdinalIgnoreCase)))
+        {
+            result.KitchenPassword = await CreateUserAsync(
+                existing,
+                _settings.KitchenUsername,
+                _settings.KitchenFullName,
+                AppRoles.Kitchen,
+                _settings.KitchenPassword);
+        }
+    }
+
+    private async Task<string?> CreateUserAsync(List<User> existing, string username, string fullName, string role, string? configured)
+    {
+        if (existing.Any(x => string.Equals(x.Username, username, StringComparison.OrdinalIgnoreCase)))
+        {
+            _logger.LogWarning("Perdoruesi {Username} ekziston tashme, roli {Role} nuk u krijua", username, role);
             return null;
         }
 
-        string username = string.IsNullOrWhiteSpace(_settings.AdminUsername) ? "admin" : _settings.AdminUsername.Trim();
-        string? configured = _settings.AdminPassword;
-        string password = string.IsNullOrWhiteSpace(configured) ? PasswordHasher.GeneratePassword(14) : configured;
         bool generated = string.IsNullOrWhiteSpace(configured);
+        string password = generated ? PasswordHasher.GeneratePassword(14) : configured!;
 
-        _db.Users.Add(new User
+        User user = new()
         {
-            FullName = string.IsNullOrWhiteSpace(_settings.AdminFullName) ? "Administrator i Byfese" : _settings.AdminFullName,
+            FullName = fullName,
             Username = username,
             PasswordHash = PasswordHasher.Hash(password),
-            Role = "Admin",
+            Role = role,
             IsActive = true,
             CreatedAtUtc = DateTime.UtcNow
-        });
+        };
 
+        _db.Users.Add(user);
+        existing.Add(user);
         await _db.SaveChangesAsync();
-        _logger.LogInformation("Perdoruesi administrator u krijua me emrin {Username}", username);
+        _logger.LogInformation("Llogaria {Role} u krijua me emrin {Username}", role, username);
 
         return generated ? password : null;
     }
@@ -136,8 +173,9 @@ public sealed class DbSeeder
 
         Dictionary<string, int> categoryIds = categories.ToDictionary(x => x.Name, x => x.Id, StringComparer.OrdinalIgnoreCase);
         int sort = 1;
+        DateTime utcNow = DateTime.UtcNow;
 
-        foreach ((string name, string description, decimal price, string image, string badge, bool recommended) in ProductSeed)
+        foreach ((string name, string description, decimal price, string image, string badge, bool recommended, int stock) in ProductSeed)
         {
             string category = name.Contains("Sandwich", StringComparison.OrdinalIgnoreCase) ||
                               name.Contains("Toste", StringComparison.OrdinalIgnoreCase) ||
@@ -153,7 +191,7 @@ public sealed class DbSeeder
                         ? "Embelsira"
                         : "Ushqime";
 
-            _db.Products.Add(new Product
+            Product product = new()
             {
                 CategoryId = categoryIds[category],
                 Name = name,
@@ -164,12 +202,17 @@ public sealed class DbSeeder
                 IsRecommended = recommended,
                 SortOrder = sort++,
                 IsActive = true,
-                CreatedAtUtc = DateTime.UtcNow
-            });
+                TrackStock = true,
+                StockQuantity = stock,
+                LowStockThreshold = 10,
+                CreatedAtUtc = utcNow
+            };
+
+            _db.Products.Add(product);
         }
 
         await _db.SaveChangesAsync();
-        _logger.LogInformation("Produktet e byfese u mbushen");
+        _logger.LogInformation("Produktet e byfese u mbushen me gjurmim stokut");
     }
 
     private async Task<int> EnsureDemoOrdersAsync()
@@ -216,6 +259,9 @@ public sealed class DbSeeder
                     }
                     : OrderStatus.Perfunduar;
 
+                int preparingMinutes = Random.Shared.Next(1, 4);
+                int readyMinutes = preparingMinutes + Random.Shared.Next(3, 8);
+
                 Order order = new()
                 {
                     Code = NextCode(orders, day),
@@ -224,9 +270,23 @@ public sealed class DbSeeder
                     Note = string.Empty,
                     Status = status,
                     CreatedAtUtc = createdUtc,
-                    UpdatedAtUtc = status == OrderStatus.Perfunduar ? createdUtc.AddMinutes(12) : createdUtc,
-                    CompletedAtUtc = status == OrderStatus.Perfunduar ? createdUtc.AddMinutes(12) : null,
-                    MarkedByUserId = status == OrderStatus.Perfunduar ? adminId : null
+                    UpdatedAtUtc = status == OrderStatus.NePritje ? createdUtc : createdUtc.AddMinutes(readyMinutes),
+                    PreparingAtUtc = status == OrderStatus.NePritje ? null : createdUtc.AddMinutes(preparingMinutes),
+                    ReadyAtUtc = status is OrderStatus.NePritje or OrderStatus.DukeUPergatitur
+                        ? null
+                        : createdUtc.AddMinutes(readyMinutes),
+                    CompletedAtUtc = status == OrderStatus.Perfunduar ? createdUtc.AddMinutes(readyMinutes + 2) : null,
+                    MarkedByUserId = status == OrderStatus.Perfunduar ? adminId : null,
+                    Payment = new Payment
+                    {
+                        Amount = 0m,
+                        Method = PaymentMethod.KarteKantine,
+                        Status = status == OrderStatus.Perfunduar ? PaymentStatus.Paguar : PaymentStatus.NePaguar,
+                        Note = string.Empty,
+                        CreatedAtUtc = createdUtc,
+                        PaidAtUtc = status == OrderStatus.Perfunduar ? createdUtc.AddMinutes(readyMinutes + 2) : null,
+                        PaidByUserId = status == OrderStatus.Perfunduar ? adminId : null
+                    }
                 };
 
                 int lines = Random.Shared.Next(1, 4);
@@ -265,6 +325,7 @@ public sealed class DbSeeder
                 }
 
                 order.TotalAmount = order.Items.Sum(x => x.LineTotal);
+                order.Payment.Amount = order.TotalAmount;
                 orders.Add(order);
             }
         }
@@ -292,6 +353,10 @@ public sealed class DbSeeder
 public sealed class SeedResult
 {
     public string? AdminPassword { get; set; }
+
+    public string? StaffPassword { get; set; }
+
+    public string? KitchenPassword { get; set; }
 
     public int DemoOrdersCreated { get; set; }
 }

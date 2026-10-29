@@ -61,8 +61,14 @@
       <button class="side-link" type="button" data-view="categories">
         <svg class="icon" aria-hidden="true"><use href="#i-tag"></use></svg>Kategorite
       </button>
+      <button class="side-link" type="button" data-view="inventory">
+        <svg class="icon" aria-hidden="true"><use href="#i-box"></use></svg>Inventari
+      </button>
+      <button class="side-link" type="button" data-view="payments">
+        <svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg>Pagesat
+      </button>
       <button class="side-link" type="button" data-view="sales">
-        <svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg>Shitjet
+        <svg class="icon" aria-hidden="true"><use href="#i-trend"></use></svg>Shitjet
       </button>
       <button class="side-link" type="button" data-view="settings">
         <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>Cilesite
@@ -72,6 +78,9 @@
     <div class="side-foot">
       <a class="side-link" href="index.html">
         <svg class="icon" aria-hidden="true"><use href="#i-cart"></use></svg>Menyja per studentet
+      </a>
+      <a class="side-link" href="kitchen.html">
+        <svg class="icon" aria-hidden="true"><use href="#i-pot"></use></svg>Ekrani i kuzhines
       </a>
       <div class="side-user">
         <span class="avatar" id="userInitial">A</span>
@@ -94,6 +103,10 @@
         <h1 id="viewTitle">Boardi</h1>
         <p id="viewSub">Duke ngarkuar te dhenat</p>
       </div>
+      <span class="live-chip" id="liveChip" title="Gjendja e lidhjes me serverin">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span id="liveChipText">Duke u lidhur</span>
+      </span>
       <div class="main-actions" id="viewActions"></div>
     </div>
 
@@ -108,10 +121,12 @@
 <script src="js/format.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/charts.js"></script>
+<script src="js/realtime.js"></script>
 <script src="js/admin-core.js"></script>
 <script src="js/admin-dashboard.js"></script>
 <script src="js/admin-orders.js"></script>
 <script src="js/admin-catalog.js"></script>
 <script src="js/admin-reports.js"></script>
+<script src="js/admin-inventory.js"></script>
 </body>
 </html>

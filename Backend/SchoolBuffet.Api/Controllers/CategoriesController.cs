@@ -6,7 +6,7 @@ using SchoolBuffet.Api.Services;
 namespace SchoolBuffet.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Manage)]
 [Route("api/admin/categories")]
 public class CategoriesController : ControllerBase
 {
@@ -24,18 +24,21 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<CategoryDto>> Create([FromBody] CategoryInput input)
     {
         return Ok(await _catalog.CreateCategoryAsync(input));
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<CategoryDto>> Update(int id, [FromBody] CategoryInput input)
     {
         return Ok(await _catalog.UpdateCategoryAsync(id, input));
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<MessageDto>> Delete(int id)
     {
         await _catalog.DeleteCategoryAsync(id);

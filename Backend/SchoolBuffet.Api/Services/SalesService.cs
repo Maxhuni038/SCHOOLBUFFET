@@ -149,7 +149,7 @@ public sealed class SalesService
             orders.Count,
             orders.Sum(x => x.Items.Sum(i => i.Quantity)),
             days,
-            orders.Take(250).Select(Map).ToList());
+            orders.Take(250).Select(OrderService.Map).ToList());
     }
 
     public async Task<string> BuildCsvAsync(string? from, string? to)
@@ -182,30 +182,6 @@ public sealed class SalesService
             .Append(history.Revenue.ToString("0.00", CultureInfo.InvariantCulture));
 
         return builder.ToString();
-    }
-
-    private static OrderDto Map(Order order)
-    {
-        List<OrderItemDto> items = order.Items
-            .OrderBy(x => x.ProductName)
-            .Select(x => new OrderItemDto(x.Id, x.ProductId, x.ProductName, x.UnitPrice, x.Quantity, x.LineTotal))
-            .ToList();
-
-        return new OrderDto(
-            order.Id,
-            order.Code,
-            order.StudentName,
-            order.ClassName,
-            order.Note,
-            order.Status.ToString(),
-            order.Status.Label(),
-            order.TotalAmount,
-            items.Sum(x => x.Quantity),
-            order.CreatedAtUtc,
-            order.UpdatedAtUtc,
-            order.CompletedAtUtc,
-            order.MarkedByUser?.FullName,
-            items);
     }
 
     private static string Escape(string? value)

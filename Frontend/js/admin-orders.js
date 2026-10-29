@@ -53,13 +53,31 @@
 
   function row(order) {
     var meta = SB.statusMeta(order.statusKey);
+    var trail = [];
+
+    trail.push(SB.esc(order.className));
+    trail.push(SB.esc(SB.dateTime(order.createdAtUtc)));
+    trail.push(SB.esc(SB.relative(order.updatedAtUtc)));
+
+    if (order.preparingAtUtc) {
+      trail.push('Kuzhina ' + SB.esc(SB.time(order.preparingAtUtc)));
+    }
+
+    if (order.readyAtUtc) {
+      trail.push('Gati ' + SB.esc(SB.time(order.readyAtUtc)));
+    }
+
+    if (order.handledBy) {
+      trail.push(SB.esc(order.handledBy));
+    }
+
+    trail.push('Pagesa: ' + SB.esc(order.paymentStatusLabel || 'Ne pagese'));
 
     return '<div class="order-row" data-row="' + order.id + '">' +
       '<div class="order-row-head">' +
         '<span class="order-code">' + SB.esc(order.code) + '</span>' +
         '<div class="grow"><b>' + SB.esc(order.studentName) + '</b>' +
-        '<p class="meta">' + SB.esc(order.className) + ' · ' + SB.esc(SB.dateTime(order.createdAtUtc)) +
-        ' · ' + SB.esc(SB.relative(order.updatedAtUtc)) + (order.handledBy ? ' · ' + SB.esc(order.handledBy) : '') + '</p></div>' +
+        '<p class="meta">' + trail.join(' · ') + '</p></div>' +
         '<span class="pill ' + meta.pill + '">' + SB.icon(meta.icon, 'icon-sm') + SB.esc(order.statusLabel) + '</span>' +
         '<b class="num nowrap">' + SB.moneyStrict(order.totalAmount) + '</b>' +
       '</div>' +
@@ -278,6 +296,13 @@
         '<div class="stat-list section-gap">' +
           '<div class="stat-line"><span>Regjistruar</span><b>' + SB.esc(SB.dateTime(order.createdAtUtc)) + '</b></div>' +
           '<div class="stat-line"><span>Perditesuar</span><b>' + SB.esc(SB.dateTime(order.updatedAtUtc)) + '</b></div>' +
+          (order.preparingAtUtc
+            ? '<div class="stat-line"><span>Kuzhina filloi</span><b>' + SB.esc(SB.dateTime(order.preparingAtUtc)) + '</b></div>'
+            : '') +
+          (order.readyAtUtc
+            ? '<div class="stat-line"><span>Shenuar gati</span><b>' + SB.esc(SB.dateTime(order.readyAtUtc)) + '</b></div>'
+            : '') +
+          '<div class="stat-line"><span>Pagesa</span><b>' + SB.esc(order.paymentStatusLabel || 'Ne pagese') + '</b></div>' +
           (order.completedAtUtc
             ? '<div class="stat-line"><span>Mbyllur</span><b>' + SB.esc(SB.dateTime(order.completedAtUtc)) + '</b></div>'
             : '') +
@@ -344,6 +369,10 @@
           }
         }
       ]);
+
+      A.defineReload(function () {
+        load(host);
+      });
 
       load(host);
     }

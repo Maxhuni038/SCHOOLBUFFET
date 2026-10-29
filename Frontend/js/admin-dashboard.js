@@ -186,14 +186,18 @@
         { id: 'reload', label: 'Rifresko', className: 'btn-ghost', icon: 'refresh', onClick: function () { A.refresh(); } }
       ]);
 
-      SB.api.get('api/admin/reports/summary?days=' + state.days).then(function (summary) {
-        A.state.openOrders = openCount(summary);
-        A.setSub('Raporti i ' + SB.plainDay(summary.date) + ' · periudha ' + state.days + ' dite');
-        render(host, summary);
-        A.refreshBadge();
-      }).catch(function (error) {
-        A.handleError(error, host);
-      });
+      var load = function () {
+        return SB.api.get('api/admin/reports/summary?days=' + state.days).then(function (summary) {
+          A.state.openOrders = openCount(summary);
+          A.setSub('Raporti i ' + SB.plainDay(summary.date) + ' · periudha ' + state.days + ' dite');
+          render(host, summary);
+        }).catch(function (error) {
+          A.handleError(error, host);
+        });
+      };
+
+      A.defineReload(load);
+      load();
     }
   };
 })(window);

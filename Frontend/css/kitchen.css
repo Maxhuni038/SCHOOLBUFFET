@@ -1,0 +1,612 @@
+.kds {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.kds.hidden {
+  display: none;
+}
+
+.kds-login {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    var(--bg-grad-1),
+    var(--bg-grad-2),
+    var(--bg);
+}
+
+.kds-login.hidden {
+  display: none;
+}
+
+.kds-login-card {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 30px 28px;
+  display: grid;
+  gap: 14px;
+}
+
+.kds-login-card h1 {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: -.02em;
+}
+
+.kds-login-mark {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-md);
+  background: var(--grad);
+  color: #fff;
+  box-shadow: var(--shadow-brand);
+}
+
+.kds-shell {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 0;
+}
+
+.kds-shell.hidden {
+  display: none;
+}
+
+.kds-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.kds-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -.01em;
+}
+
+.kds-brand small {
+  display: block;
+  font-weight: 600;
+  font-size: 11.5px;
+  color: var(--faint);
+  letter-spacing: .02em;
+}
+
+.kds-brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--grad);
+  color: #fff;
+}
+
+.kds-clock {
+  display: grid;
+  gap: 0;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+
+.kds-clock b {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+
+.kds-clock small {
+  color: var(--faint);
+  font-weight: 600;
+}
+
+.kds-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.kds-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.kds-chip b {
+  font-family: var(--mono);
+  font-size: 15px;
+  color: var(--text);
+}
+
+.kds-chip-amber {
+  border-color: var(--warn-line);
+  background: var(--warn-soft);
+}
+
+.kds-chip-amber b {
+  color: #a8670a;
+}
+
+.kds-chip-blue {
+  border-color: var(--accent-2-line);
+  background: var(--accent-2-soft);
+}
+
+.kds-chip-blue b {
+  color: #2a55cc;
+}
+
+.kds-chip-green {
+  border-color: var(--income-line);
+  background: var(--income-soft);
+}
+
+.kds-chip-green b {
+  color: #0a8768;
+}
+
+.kds-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kds-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.kds-link-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.kds-link.is-live {
+  border-color: var(--income-line);
+  background: var(--income-soft);
+  color: #0a8768;
+}
+
+.kds-link.is-live .kds-link-dot {
+  background: var(--income);
+  box-shadow: 0 0 0 4px rgba(22, 199, 154, .18);
+  animation: kds-pulse 2.2s var(--ease) infinite;
+}
+
+.kds-link.is-warn {
+  border-color: var(--warn-line);
+  background: var(--warn-soft);
+  color: #a8670a;
+}
+
+.kds-link.is-warn .kds-link-dot {
+  background: var(--warn);
+}
+
+.kds-link.is-down {
+  border-color: var(--expense-line);
+  background: var(--expense-soft);
+  color: #b3214a;
+}
+
+.kds-link.is-down .kds-link-dot {
+  background: var(--expense);
+}
+
+.kds-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 16px 20px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kds-col {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.kds-col-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.kds-col-head h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.kds-col-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.kds-col-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.kds-col[data-col="new"] .kds-col-dot {
+  background: var(--warn);
+}
+
+.kds-col[data-col="preparing"] .kds-col-dot {
+  background: var(--accent-2);
+}
+
+.kds-col[data-col="ready"] .kds-col-dot {
+  background: var(--income);
+}
+
+.kds-col[data-col="new"] {
+  border-top: 3px solid var(--warn);
+}
+
+.kds-col[data-col="preparing"] {
+  border-top: 3px solid var(--accent-2);
+}
+
+.kds-col[data-col="ready"] {
+  border-top: 3px solid var(--income);
+}
+
+.kds-col-body {
+  display: grid;
+  align-content: start;
+  gap: 11px;
+  padding: 12px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.kds-loading {
+  padding: 22px 10px;
+  text-align: center;
+  color: var(--faint);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kds-none {
+  padding: 26px 12px;
+  text-align: center;
+  color: var(--faint);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+
+.kds-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--faint);
+  border-radius: var(--r-sm);
+  padding: 13px 14px 12px;
+  display: grid;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.kds-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.kds-card[data-tone="new"] {
+  border-left-color: var(--warn);
+}
+
+.kds-card[data-tone="preparing"] {
+  border-left-color: var(--accent-2);
+}
+
+.kds-card[data-tone="ready"] {
+  border-left-color: var(--income);
+}
+
+.kds-card.is-urgent {
+  border-color: var(--expense-line);
+  background: linear-gradient(180deg, #fff, var(--expense-soft));
+}
+
+.kds-card.is-fresh {
+  animation: kds-pop .5s var(--ease);
+}
+
+.kds-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kds-code {
+  font-family: var(--mono);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.kds-timer {
+  margin-left: auto;
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+}
+
+.kds-timer b {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.kds-timer small {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--faint);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.kds-card.is-urgent .kds-timer b {
+  color: var(--expense);
+}
+
+.kds-who {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+
+.kds-who span {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.kds-lines {
+  display: grid;
+  gap: 6px;
+  padding: 10px 11px;
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+}
+
+.kds-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.kds-line-qty {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  min-width: 30px;
+  padding: 2px 7px;
+  text-align: center;
+  border-radius: var(--r-xs);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  border: 1px solid var(--brand-line);
+}
+
+.kds-card[data-tone="ready"] .kds-line-qty {
+  background: var(--income-soft);
+  color: #0a8768;
+  border-color: var(--income-line);
+}
+
+.kds-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: var(--r-xs);
+  background: var(--warn-soft);
+  border: 1px solid var(--warn-line);
+  color: #8a5406;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.kds-acts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kds-acts .btn {
+  flex: 1;
+  justify-content: center;
+  min-width: 132px;
+}
+
+.kds-btn-ready {
+  background: var(--income) !important;
+  box-shadow: 0 14px 30px -16px rgba(22, 199, 154, .95) !important;
+}
+
+.kds-btn-cook {
+  background: var(--grad) !important;
+}
+
+.kds-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 9px 20px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--faint);
+}
+
+.kds-foot b {
+  font-family: var(--mono);
+  color: var(--muted);
+}
+
+@keyframes kds-pop {
+  from {
+    transform: scale(.97);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, .22);
+  }
+
+  to {
+    transform: scale(1);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+@keyframes kds-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(22, 199, 154, .16);
+  }
+
+  50% {
+    box-shadow: 0 0 0 7px rgba(22, 199, 154, .06);
+  }
+}
+
+@media (max-width: 1180px) {
+  .kds-clock {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .kds-board {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .kds-col {
+    min-height: 220px;
+  }
+
+  .kds-bar {
+    gap: 10px 12px;
+    padding: 10px 14px;
+  }
+
+  .kds-stats {
+    width: 100%;
+    order: 3;
+    margin-left: 0;
+    flex-wrap: nowrap;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .kds-chip {
+    flex: 0 0 auto;
+  }
+
+  .kds-tools {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 700px) {
+  .kds-brand {
+    font-size: 15px;
+  }
+
+  .kds-brand small {
+    font-size: 11px;
+  }
+
+  .kds-tools .btn {
+    padding: 8px 10px;
+  }
+
+  .kds-code {
+    font-size: 17px;
+  }
+}

@@ -20,10 +20,12 @@ public sealed class CatalogService
     };
 
     private readonly SchoolBuffetDbContext _db;
+    private readonly RealtimeService _realtime;
 
-    public CatalogService(SchoolBuffetDbContext db)
+    public CatalogService(SchoolBuffetDbContext db, RealtimeService realtime)
     {
         _db = db;
+        _realtime = realtime;
     }
 
     public async Task<MenuDto> GetMenuAsync(string currencyLabel)
@@ -129,6 +131,7 @@ public sealed class CatalogService
 
         _db.Categories.Add(category);
         await _db.SaveChangesAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, null, category.Name, "Kategori e re");
 
         return new CategoryDto(category.Id, category.Name, category.Icon, category.AccentColor,
             category.Description, category.SortOrder, category.IsActive, 0, category.CreatedAtUtc);
@@ -162,6 +165,7 @@ public sealed class CatalogService
         category.UpdatedAtUtc = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, null, category.Name, "Kategori e ndryshuar");
 
         int productCount = await _db.Products.CountAsync(x => x.CategoryId == category.Id);
 
@@ -182,6 +186,7 @@ public sealed class CatalogService
         }
 
         await _db.Categories.Where(x => x.Id == id).ExecuteDeleteAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, null, category.Name, "Kategori e fshire");
     }
 
     public async Task<List<ProductDto>> GetProductsAsync(string? search, int? categoryId, bool includeInactive)
@@ -233,6 +238,11 @@ public sealed class CatalogService
                 x.SortOrder,
                 x.IsActive,
                 orderCounts.TryGetValue(x.Id, out int times) ? times : 0,
+                x.TrackStock,
+                x.StockQuantity,
+                x.LowStockThreshold,
+                StockKey(x),
+                StockLabel(x),
                 x.CreatedAtUtc))
             .ToList();
     }
@@ -253,6 +263,7 @@ public sealed class CatalogService
 
         _db.Products.Add(product);
         await _db.SaveChangesAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, product.Id, product.Name, "Produkt i ri");
 
         return await GetProductAsync(product.Id);
     }
@@ -265,6 +276,7 @@ public sealed class CatalogService
         await ApplyAsync(product, input, id);
         product.UpdatedAtUtc = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, product.Id, product.Name, "Produkt i ndryshuar");
 
         return await GetProductAsync(id);
     }
@@ -275,6 +287,7 @@ public sealed class CatalogService
             ?? NotFound<Product>("Produkti nuk u gjet");
 
         await _db.Products.Where(x => x.Id == product.Id).ExecuteDeleteAsync();
+        _realtime.Publish(RealtimeKinds.Catalog, null, product.Name, "Produkt i fshire");
     }
 
     public string ResolveImagePath(string? value)
@@ -310,6 +323,12 @@ public sealed class CatalogService
         string badge = Clamp(input.Badge, 24);
         int sortOrder = input.SortOrder ?? 0;
         bag.Ensure(sortOrder is >= 0 and <= 9999, nameof(input.SortOrder), "Radha e renditjes duhet te jete numer midis 0 dhe 9999");
+
+        bool trackStock = input.TrackStock ?? product.TrackStock;
+        int stockQuantity = input.StockQuantity ?? product.StockQuantity;
+        int threshold = input.LowStockThreshold ?? product.LowStockThreshold;
+        bag.Ensure(stockQuantity is >= 0 and <= 100000, nameof(input.StockQuantity), "Sasia ne stok duhet te jete numer midis 0 dhe 100000");
+        bag.Ensure(threshold is >= 0 and <= 100000, nameof(input.LowStockThreshold), "Pragu i stokut te ulet duhet te jete numer midis 0 dhe 100000");
 
         decimal price = 0m;
         if (input.Price is null)
@@ -355,6 +374,27 @@ public sealed class CatalogService
         product.IsRecommended = input.IsRecommended ?? product.IsRecommended;
         product.SortOrder = sortOrder;
         product.IsActive = input.IsActive ?? product.IsActive;
+        product.TrackStock = trackStock;
+        product.LowStockThreshold = threshold;
+
+        if (trackStock && product.StockQuantity != stockQuantity)
+        {
+            int delta = stockQuantity - product.StockQuantity;
+            product.StockQuantity = stockQuantity;
+
+            if (currentId is > 0)
+            {
+                _db.StockMovements.Add(new StockMovement
+                {
+                    ProductId = product.Id,
+                    Change = delta,
+                    StockAfter = stockQuantity,
+                    Reason = StockReasons.Correction,
+                    Reference = "Menaxhimi i produktit",
+                    CreatedAtUtc = DateTime.UtcNow
+                });
+            }
+        }
     }
 
     private static ProductDto ToDto(Product product, int timesOrdered)
@@ -374,7 +414,38 @@ public sealed class CatalogService
             product.SortOrder,
             product.IsActive,
             timesOrdered,
+            product.TrackStock,
+            product.StockQuantity,
+            product.LowStockThreshold,
+            StockKey(product),
+            StockLabel(product),
             product.CreatedAtUtc);
+    }
+
+    private static string StockKey(Product product)
+    {
+        if (!product.TrackStock)
+        {
+            return "PaGjurmim";
+        }
+
+        if (product.StockQuantity <= 0)
+        {
+            return "Mbaruar";
+        }
+
+        return product.StockQuantity <= product.LowStockThreshold ? "IUlet" : "NeDorze";
+    }
+
+    private static string StockLabel(Product product)
+    {
+        return StockKey(product) switch
+        {
+            "Mbaruar" => "Mbaruar",
+            "IUlet" => "Sasi e ulet",
+            "NeDorze" => "Ne dorze",
+            _ => "Pa gjurmim"
+        };
     }
 
     private static T NotFound<T>(string message)

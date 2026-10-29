@@ -16,6 +16,18 @@ public sealed class AppSettings
 
     public string? AdminPassword { get; init; }
 
+    public string StaffUsername { get; init; } = "staff";
+
+    public string StaffFullName { get; init; } = "Punetonjes i byfese";
+
+    public string? StaffPassword { get; init; }
+
+    public string KitchenUsername { get; init; } = "kuzhina";
+
+    public string KitchenFullName { get; init; } = "Ekipe e kuzhines";
+
+    public string? KitchenPassword { get; init; }
+
     public string FrontendPath { get; init; } = string.Empty;
 
     public string UploadPath { get; init; } = string.Empty;
@@ -40,6 +52,14 @@ public sealed class AppSettings
             AdminFullName = configuration["Admin:FullName"] ?? "Administrator i Byfese",
             AdminPassword = Environment.GetEnvironmentVariable("SCHOOLBUFFET_ADMIN_PASSWORD")
                 ?? configuration["Admin:Password"],
+            StaffUsername = configuration["Staff:Username"] ?? "staff",
+            StaffFullName = configuration["Staff:FullName"] ?? "Punetonjes i byfese",
+            StaffPassword = Environment.GetEnvironmentVariable("SCHOOLBUFFET_STAFF_PASSWORD")
+                ?? configuration["Staff:Password"],
+            KitchenUsername = configuration["Kitchen:Username"] ?? "kuzhina",
+            KitchenFullName = configuration["Kitchen:FullName"] ?? "Ekipe e kuzhines",
+            KitchenPassword = Environment.GetEnvironmentVariable("SCHOOLBUFFET_KITCHEN_PASSWORD")
+                ?? configuration["Kitchen:Password"],
             FrontendPath = configuration["Frontend:Path"] ?? string.Empty,
             UploadPath = configuration["Frontend:UploadPath"] ?? string.Empty,
             MaxUploadKilobytes = configuration.GetValue("Uploads:MaxKilobytes", 3000),

@@ -66,9 +66,10 @@
         ? '<span class="pill pill-green">' + SB.icon('check', 'icon-sm') + 'Aktiv</span>'
         : '<span class="pill pill-red">' + SB.icon('close', 'icon-sm') + 'Jashte meny</span>') + '</td>' +
       '<td class="muted nowrap">' + SB.esc(SB.dayLabel(product.createdAtUtc)) + '</td>' +
-      '<td><div class="row-actions">' +
-        '<button class="btn btn-ghost btn-sm" type="button" data-edit="' + product.id + '">' + SB.icon('settings', 'icon-sm') + 'Redakto</button>' +
-        '<button class="btn btn-ghost btn-sm" type="button" data-drop="' + product.id + '">' + SB.icon('trash', 'icon-sm') + 'Fshij</button>' +
+      '<td><div class="row-actions">' + (A.canCatalog()
+        ? '<button class="btn btn-ghost btn-sm" type="button" data-edit="' + product.id + '">' + SB.icon('settings', 'icon-sm') + 'Redakto</button>' +
+          '<button class="btn btn-ghost btn-sm" type="button" data-drop="' + product.id + '">' + SB.icon('trash', 'icon-sm') + 'Fshij</button>'
+        : '<span class="tiny muted">Vetem administratori</span>') +
       '</div></td>' +
     '</tr>';
   }
@@ -176,7 +177,10 @@
       badge: '',
       isRecommended: false,
       sortOrder: 0,
-      isActive: true
+      isActive: true,
+      trackStock: false,
+      stockQuantity: 0,
+      lowStockThreshold: 10
     };
 
     return '<div class="split">' +
@@ -212,6 +216,18 @@
         '<label class="toggle"><input type="checkbox" id="IsRecommended" name="IsRecommended"' +
         (current.isRecommended ? ' checked' : '') + '><i></i><span>I rekomanduar</span></label></div>' +
     '</div>' +
+    '<div class="split">' +
+      '<div class="field"><label>Gjurmimi i sases</label>' +
+        '<label class="toggle"><input type="checkbox" id="TrackStock" name="TrackStock"' + (current.trackStock ? ' checked' : '') + '>' +
+        '<i></i><span>Gjurmo sasin</span></label>' +
+        '<span class="tiny muted">Kur porosia krijohet, sasia zvogelohet automatikisht.</span></div>' +
+      '<div class="field"><label for="LowStockThreshold">Praggi i ulete</label>' +
+        '<input class="input" id="LowStockThreshold" name="LowStockThreshold" type="number" min="0" max="9999" value="' + SB.esc(current.lowStockThreshold) + '">' +
+        '<span class="field-error"></span></div>' +
+    '</div>' +
+    '<div class="field"><label for="StockQuantity">Sasia ne dorze (copeke)</label>' +
+      '<input class="input" id="StockQuantity" name="StockQuantity" type="number" min="0" max="99999" value="' + SB.esc(current.stockQuantity) + '">' +
+      '<span class="field-error"></span></div>' +
     '<div class="field"><label>Fotoja e produktit</label>' +
       '<div class="preview"><img id="ImagePreview" src="' + SB.esc(current.imagePath) + '" alt="Parakalimi i fotos"></div>' +
       '<input type="hidden" id="ImagePath" name="ImagePath" value="' + SB.esc(current.imagePath) + '">' +
@@ -301,7 +317,10 @@
       badge: root.querySelector('#Badge').value.trim(),
       isRecommended: root.querySelector('#IsRecommended').checked,
       sortOrder: Number(root.querySelector('#SortOrder').value) || 0,
-      isActive: root.querySelector('#IsActive').checked
+      isActive: root.querySelector('#IsActive').checked,
+      trackStock: root.querySelector('#TrackStock').checked,
+      stockQuantity: Number(root.querySelector('#StockQuantity').value) || 0,
+      lowStockThreshold: Number(root.querySelector('#LowStockThreshold').value) || 0
     };
 
     SB.busy(button, true, 'Duke ruajtur');
@@ -360,9 +379,10 @@
         ? '<span class="pill pill-green">' + SB.icon('check', 'icon-sm') + 'Aktiv</span>'
         : '<span class="pill pill-red">' + SB.icon('close', 'icon-sm') + 'Fshehur</span>') + '</td>' +
       '<td class="muted nowrap">' + SB.esc(SB.dayLabel(category.createdAtUtc)) + '</td>' +
-      '<td><div class="row-actions">' +
-        '<button class="btn btn-ghost btn-sm" type="button" data-edit="' + category.id + '">' + SB.icon('settings', 'icon-sm') + 'Redakto</button>' +
-        '<button class="btn btn-ghost btn-sm" type="button" data-drop="' + category.id + '">' + SB.icon('trash', 'icon-sm') + 'Fshij</button>' +
+      '<td><div class="row-actions">' + (A.canCatalog()
+        ? '<button class="btn btn-ghost btn-sm" type="button" data-edit="' + category.id + '">' + SB.icon('settings', 'icon-sm') + 'Redakto</button>' +
+          '<button class="btn btn-ghost btn-sm" type="button" data-drop="' + category.id + '">' + SB.icon('trash', 'icon-sm') + 'Fshij</button>'
+        : '<span class="tiny muted">Vetem administratori</span>') +
       '</div></td>' +
     '</tr>';
   }
@@ -550,14 +570,14 @@
     skeleton: 3,
     render: function (host) {
       A.setActions([
-        {
+        A.canCatalog() ? {
           id: 'new',
           label: 'Produkt i ri',
           icon: 'plus',
           onClick: function () {
             openProductForm(null, host);
           }
-        },
+        } : null,
         {
           id: 'reload',
           label: 'Rifresko',
@@ -568,6 +588,10 @@
           }
         }
       ]);
+
+      A.defineReload(function () {
+        loadProducts(host);
+      });
 
       SB.api.get('api/admin/categories?includeInactive=false').then(function (list) {
         products.categories = list;
@@ -583,14 +607,14 @@
     skeleton: 2,
     render: function (host) {
       A.setActions([
-        {
+        A.canCatalog() ? {
           id: 'new',
           label: 'Kategori e re',
           icon: 'plus',
           onClick: function () {
             openCategoryForm(null, host);
           }
-        },
+        } : null,
         {
           id: 'reload',
           label: 'Rifresko',
@@ -601,6 +625,10 @@
           }
         }
       ]);
+
+      A.defineReload(function () {
+        loadCategories(host);
+      });
 
       loadCategories(host);
     }

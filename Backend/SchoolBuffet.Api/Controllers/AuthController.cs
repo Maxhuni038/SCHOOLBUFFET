@@ -62,14 +62,14 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<ActionResult<AdminUserDto>> Me()
     {
-        return Ok(await _auth.GetAsync(this.User.AdminId()));
+        return Ok(await _auth.GetAsync(this.User.UserId()));
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Staff,Kitchen")]
     [HttpPost("password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
-        await _auth.ChangePasswordAsync(this.User.AdminId(), request.CurrentPassword, request.NewPassword);
+        await _auth.ChangePasswordAsync(this.User.UserId(), request.CurrentPassword, request.NewPassword);
         return Ok(new MessageDto("Fjalakalimi u ndryshua me sukses."));
     }
 }

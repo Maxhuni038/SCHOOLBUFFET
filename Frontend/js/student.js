@@ -46,7 +46,8 @@
     guest: readJson(GUEST_KEY, { studentName: '', className: '' }),
     category: 'all',
     search: '',
-    loadingOrders: false
+    loadingOrders: false,
+    statusByCode: {}
   };
 
   function readJson(key, fallback) {
@@ -603,11 +604,26 @@
         return !!order;
       });
       state.loadingOrders = false;
+      notifyProgress(state.orders);
       renderMyOrders();
     }).catch(function (error) {
       state.loadingOrders = false;
       dom.myOrders.innerHTML = '<div class="empty">' + SB.icon('warning') +
         '<p>' + SB.esc(error.message) + '</p></div>';
+    });
+  }
+
+  function notifyProgress(orders) {
+    orders.forEach(function (order) {
+      var before = state.statusByCode[order.code];
+
+      if (before && before !== order.statusKey && order.statusKey === 'Gati') {
+        SB.toast('Porosia ' + order.code + ' eshte Gati. Merre nga byfeja.', 'success');
+      } else if (before && before !== order.statusKey && order.statusKey === 'DukeUPergatitur') {
+        SB.toast('Kuzhina po e pergatit porosien ' + order.code + '.', 'info');
+      }
+
+      state.statusByCode[order.code] = order.statusKey;
     });
   }
 
@@ -782,10 +798,48 @@
     });
 
     setInterval(function () {
-      if (!dom.viewOrders.classList.contains('hidden') && !document.hidden && state.codes.length) {
-        loadMyOrders();
+      if (document.hidden || !state.codes.length) {
+        return;
       }
-    }, 30000);
+
+      if (SB.realtime.state() === 'live') {
+        return;
+      }
+
+      loadMyOrders();
+    }, 20000);
+
+    startRealtime();
+  }
+
+  var refreshOrders = SB.debounce(function () {
+    if (state.codes.length) {
+      loadMyOrders();
+    }
+  }, 500);
+
+  var refreshMenu = SB.debounce(function () {
+    loadMenu();
+  }, 1200);
+
+  function startRealtime() {
+    SB.realtime.on(function (signal) {
+      if (signal.kind === 'porosi') {
+        refreshOrders();
+        return;
+      }
+
+      if (signal.kind === 'meny') {
+        refreshMenu();
+        return;
+      }
+
+      if (signal.kind === 'zgjim') {
+        refreshOrders();
+      }
+    });
+
+    SB.realtime.connect({ url: 'api/realtime/stream', pollMs: 20000 });
   }
 
   SB.icons().then(function () {

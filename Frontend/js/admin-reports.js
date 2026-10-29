@@ -132,6 +132,10 @@
         { id: 'reload', label: 'Rifresko', className: 'btn-ghost', icon: 'refresh', onClick: function () { loadSales(host); } }
       ]);
 
+      A.defineReload(function () {
+        loadSales(host);
+      });
+
       loadSales(host);
     }
   };

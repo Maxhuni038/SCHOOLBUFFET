@@ -34,6 +34,11 @@ public record ProductDto(
     int SortOrder,
     bool IsActive,
     int TimesOrdered,
+    bool TrackStock,
+    int StockQuantity,
+    int LowStockThreshold,
+    string StockStatusKey,
+    string StockStatusLabel,
     DateTime CreatedAtUtc);
 
 public record ProductInput(
@@ -45,7 +50,10 @@ public record ProductInput(
     string? Badge,
     bool? IsRecommended,
     int? SortOrder,
-    bool? IsActive);
+    bool? IsActive,
+    bool? TrackStock,
+    int? StockQuantity,
+    int? LowStockThreshold);
 
 public record MenuItemDto(
     int Id,

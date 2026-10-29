@@ -23,9 +23,14 @@ if (string.IsNullOrWhiteSpace(settings.ConnectionString))
 
 builder.Services.AddSingleton(settings);
 builder.Services.AddSingleton(new SchoolClock(settings.TimeZoneId));
+builder.Services.AddSingleton<RealtimeService>();
+builder.Services.AddHostedService<RealtimeHeartbeat>();
 builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<SalesService>();
+builder.Services.AddScoped<KitchenService>();
+builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<StockService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<FileStorageService>();
 builder.Services.AddScoped<DbSeeder>();
@@ -209,9 +214,20 @@ app.UseStaticFiles(new StaticFileOptions
     ContentTypeProvider = contentTypes,
     OnPrepareResponse = context =>
     {
-        if (context.Context.Request.Path.StartsWithSegments("/assets/img/uploads"))
+        var path = context.Context.Request.Path;
+        var value = path.Value ?? string.Empty;
+
+        if (path.StartsWithSegments("/assets/img/uploads"))
         {
             context.Context.Response.Headers["Cache-Control"] = "public, max-age=600";
+            return;
+        }
+
+        if (value.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWithSegments("/js")
+            || path.StartsWithSegments("/css"))
+        {
+            context.Context.Response.Headers["Cache-Control"] = "no-cache";
         }
     }
 });
@@ -268,11 +284,25 @@ static async Task RunStartupTasksAsync(WebApplication app, AppSettings settings)
         if (!string.IsNullOrWhiteSpace(result.AdminPassword))
         {
             logger.LogWarning("-------------------------------------------------");
-            logger.LogWarning("ADMINISTRATOR I RI U KRIJUA AUTOMATIKISHT");
-            logger.LogWarning("Perdoruesi: {Username}", settings.AdminUsername);
-            logger.LogWarning("Fjalakalimi: {Password}", result.AdminPassword);
-            logger.LogWarning("Ruaje kete fjalakalim dhe ndryshoje pas hyrjes se pare.");
+            logger.LogWarning("LLOGARI TE REJA U KRIJUAN AUTOMATIKISHT");
+            logger.LogWarning("Perdoruesi: {Username} | Fjalakalimi: {Password}", settings.AdminUsername, result.AdminPassword);
+            logger.LogWarning("Fjalakalimi i punetonjesit eshte ne rreshtin tjeter.");
             logger.LogWarning("-------------------------------------------------");
+        }
+
+        if (!string.IsNullOrWhiteSpace(result.StaffPassword))
+        {
+            logger.LogWarning("Punetonjesi: {Username} | Fjalakalimi: {Password}", settings.StaffUsername, result.StaffPassword);
+        }
+
+        if (!string.IsNullOrWhiteSpace(result.KitchenPassword))
+        {
+            logger.LogWarning("Kuzhina: {Username} | Fjalakalimi: {Password}", settings.KitchenUsername, result.KitchenPassword);
+        }
+
+        if (result.AdminPassword is not null || result.StaffPassword is not null || result.KitchenPassword is not null)
+        {
+            logger.LogWarning("Ruaji keto fjalakalime dhe ndryshoji pas hyrjes se pare.");
         }
 
         if (result.DemoOrdersCreated > 0)

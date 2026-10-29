@@ -12,11 +12,22 @@ public sealed class OrderService
 
     private readonly SchoolBuffetDbContext _db;
     private readonly SchoolClock _clock;
+    private readonly StockService _stock;
+    private readonly PaymentService _payments;
+    private readonly RealtimeService _realtime;
 
-    public OrderService(SchoolBuffetDbContext db, SchoolClock clock)
+    public OrderService(
+        SchoolBuffetDbContext db,
+        SchoolClock clock,
+        StockService stock,
+        PaymentService payments,
+        RealtimeService realtime)
     {
         _db = db;
         _clock = clock;
+        _stock = stock;
+        _payments = payments;
+        _realtime = realtime;
     }
 
     public async Task<OrderDto> CreateAsync(CreateOrderRequest input)
@@ -74,6 +85,7 @@ public sealed class OrderService
         }
 
         Dictionary<int, Product> byId = products.ToDictionary(x => x.Id);
+        DateTime utcNow = DateTime.UtcNow;
 
         Order order = new()
         {
@@ -81,8 +93,8 @@ public sealed class OrderService
             ClassName = className,
             Note = note,
             Status = OrderStatus.NePritje,
-            CreatedAtUtc = DateTime.UtcNow,
-            UpdatedAtUtc = DateTime.UtcNow
+            CreatedAtUtc = utcNow,
+            UpdatedAtUtc = utcNow
         };
 
         foreach ((int productId, int quantity) in quantities.OrderBy(x => x.Key))
@@ -101,8 +113,32 @@ public sealed class OrderService
         order.TotalAmount = order.Items.Sum(x => x.LineTotal);
         order.Code = await GenerateCodeAsync();
 
+        List<StockMovement> ledger = await _stock.ReserveAsync(order, null);
+
         _db.Orders.Add(order);
-        await _db.SaveChangesAsync();
+        _payments.OpenPaymentFor(order);
+
+        if (ledger.Count > 0)
+        {
+            _db.StockMovements.AddRange(ledger);
+        }
+
+        try
+        {
+            await _db.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            await _stock.CompensateAsync(order);
+            throw;
+        }
+
+        _realtime.Publish(RealtimeKinds.Order, order.Id, order.Code, order.Status.ToString());
+
+        if (ledger.Count > 0)
+        {
+            _realtime.Publish(RealtimeKinds.Stock, order.Id, order.Code, "Rezervuar nga porosia");
+        }
 
         return Map(order);
     }
@@ -119,6 +155,7 @@ public sealed class OrderService
             .AsNoTracking()
             .Include(x => x.Items)
             .Include(x => x.MarkedByUser)
+            .Include(x => x.Payment)
             .FirstOrDefaultAsync(x => x.Code == normalized);
 
         if (order is null)
@@ -137,7 +174,11 @@ public sealed class OrderService
 
     public async Task<OrderListDto> ListAsync(string? statusFilter, string? search, string? date, int page, int pageSize)
     {
-        IQueryable<Order> query = _db.Orders.AsNoTracking().Include(x => x.Items);
+        IQueryable<Order> query = _db.Orders
+            .AsNoTracking()
+            .Include(x => x.Items)
+            .Include(x => x.Payment)
+            .Include(x => x.MarkedByUser);
 
         if (OrderStatusText.TryParse(statusFilter, out OrderStatus status))
         {
@@ -183,7 +224,7 @@ public sealed class OrderService
             string.IsNullOrWhiteSpace(date) ? null : date);
     }
 
-    public async Task<OrderDto> UpdateStatusAsync(int id, string? statusValue, int userId)
+    public async Task<OrderDto> UpdateStatusAsync(int id, string? statusValue, int userId, bool kitchenOnly)
     {
         if (!OrderStatusText.TryParse(statusValue, out OrderStatus next))
         {
@@ -192,6 +233,7 @@ public sealed class OrderService
 
         Order order = await _db.Orders
             .Include(x => x.Items)
+            .Include(x => x.Payment)
             .FirstOrDefaultAsync(x => x.Id == id)
             ?? NotFound<Order>("Porosia nuk u gjet");
 
@@ -202,22 +244,105 @@ public sealed class OrderService
             AppThrow.Conflict($"Porosia {order.Code} tashme ka statusin {next.Label()}.");
         }
 
+        if (kitchenOnly)
+        {
+            GuardKitchenScope(order.Status, next, order.Code);
+        }
+
         order.Status = next;
         order.UpdatedAtUtc = utcNow;
-        order.CompletedAtUtc = next == OrderStatus.Perfunduar ? utcNow : null;
         order.MarkedByUserId = userId;
+        OrderFlow.ApplyTimestamps(order, next, utcNow);
 
         await _db.SaveChangesAsync();
+
+        if (next == OrderStatus.Perfunduar)
+        {
+            await _payments.SettleOnHandoverAsync(order.Id, userId);
+        }
+
+        _realtime.Publish(RealtimeKinds.Order, order.Id, order.Code, next.ToString());
 
         return Map(order);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<OrderDto> AdvanceAsync(int id, string? action, int userId, bool canClose)
     {
-        Order order = await _db.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id)
+        string verb = (action ?? string.Empty).Trim().ToLowerInvariant();
+
+        Order order = await _db.Orders
+            .Include(x => x.Items)
+            .Include(x => x.Payment)
+            .FirstOrDefaultAsync(x => x.Id == id)
             ?? NotFound<Order>("Porosia nuk u gjet");
 
+        int index = OrderFlow.Index(order.Status);
+        OrderStatus next = verb switch
+        {
+            "start" or "fillo" => OrderFlow.Sequence[Math.Min(index + 1, OrderFlow.Sequence.Length - 1)],
+            "ready" or "gati" when order.Status == OrderStatus.NePritje => OrderStatus.DukeUPergatitur,
+            "ready" or "gati" => OrderStatus.Gati,
+            "back" or "mbrapsht" => index == 0 ? order.Status : OrderFlow.Sequence[index - 1],
+            "done" or "mbyll" => OrderStatus.Perfunduar,
+            _ => NotFound<OrderStatus>("Vepria e kuzhines nuk njihet")
+        };
+
+        bool touchesClose = next == OrderStatus.Perfunduar || order.Status == OrderStatus.Perfunduar;
+        if (touchesClose && !canClose)
+        {
+            AppThrow.Forbidden($"Mbyllja dhe rihapja e porosive behet nga punetonjesi i byfese ose administratori. Porosia {order.Code} ka statusin {order.Status.Label()}.");
+        }
+
+        if (next == order.Status)
+        {
+            AppThrow.Conflict($"Porosia {order.Code} nuk mund te {verb} me tej. Statusi aktual: {order.Status.Label()}.");
+        }
+
+        DateTime utcNow = DateTime.UtcNow;
+        order.Status = next;
+        order.UpdatedAtUtc = utcNow;
+        order.MarkedByUserId = userId;
+        OrderFlow.ApplyTimestamps(order, next, utcNow);
+
+        await _db.SaveChangesAsync();
+
+        if (next == OrderStatus.Perfunduar)
+        {
+            await _payments.SettleOnHandoverAsync(order.Id, userId);
+        }
+
+        _realtime.Publish(RealtimeKinds.Order, order.Id, order.Code, next.ToString());
+
+        return Map(order);
+    }
+
+    public async Task DeleteAsync(int id, int? userId)
+    {
+        Order order = await _db.Orders
+            .Include(x => x.Items)
+            .FirstOrDefaultAsync(x => x.Id == id)
+            ?? NotFound<Order>("Porosia nuk u gjet");
+
+        await _stock.RestoreAsync(order, userId, StockReasons.OrderCancelled);
+
         await _db.Orders.Where(x => x.Id == order.Id).ExecuteDeleteAsync();
+        _db.ChangeTracker.Clear();
+
+        _realtime.Publish(RealtimeKinds.Order, order.Id, order.Code, "E fshire");
+    }
+
+    private static void GuardKitchenScope(OrderStatus from, OrderStatus to, string code)
+    {
+        if (to == OrderStatus.Perfunduar)
+        {
+            AppThrow.Forbidden($"Porosia {code} u shenua Gati. Per mbylljen e porosise duhet punetonjesi i byfese ose administratori.");
+        }
+
+        bool adjacent = Math.Abs(OrderFlow.Index(to) - OrderFlow.Index(from)) == 1;
+        if (!adjacent)
+        {
+            AppThrow.BadRequest($"Kuzhina mund te ndryshoj vetem statusin ne hapsiren ngjitur. Porosia {code} ka statusin {from.Label()}.");
+        }
     }
 
     private async Task<string> GenerateCodeAsync()
@@ -243,11 +368,12 @@ public sealed class OrderService
             .AsNoTracking()
             .Include(x => x.Items)
             .Include(x => x.MarkedByUser)
+            .Include(x => x.Payment)
             .FirstOrDefaultAsync(x => x.Id == id)
             ?? NotFound<Order>("Porosia nuk u gjet");
     }
 
-    private static OrderDto Map(Order order)
+    internal static OrderDto Map(Order order)
     {
         List<OrderItemDto> items = order.Items
             .OrderBy(x => x.ProductName)
@@ -266,8 +392,12 @@ public sealed class OrderService
             items.Sum(x => x.Quantity),
             order.CreatedAtUtc,
             order.UpdatedAtUtc,
+            order.PreparingAtUtc,
+            order.ReadyAtUtc,
             order.CompletedAtUtc,
             order.MarkedByUser?.FullName,
+            order.Payment?.Status.ToString(),
+            order.Payment?.Status.Label(),
             items);
     }
 

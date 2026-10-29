@@ -104,6 +104,12 @@ namespace SchoolBuffet.Api.Data.Migrations
                         .HasMaxLength(240)
                         .HasColumnType("character varying(240)");
 
+                    b.Property<DateTime?>("PreparingAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ReadyAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(24)
@@ -171,6 +177,61 @@ namespace SchoolBuffet.Api.Data.Migrations
                     b.ToTable("OrderItems", "public");
                 });
 
+            modelBuilder.Entity("SchoolBuffet.Api.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric(12,2)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(240)
+                        .HasColumnType("character varying(240)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("PaidAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("PaidByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("PaidByUserId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("Payments", "public", t =>
+                        {
+                            t.HasCheckConstraint("CK_Payments_Amount", "\"Amount\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("SchoolBuffet.Api.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -206,6 +267,9 @@ namespace SchoolBuffet.Api.Data.Migrations
                     b.Property<bool>("IsRecommended")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("LowStockThreshold")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(80)
@@ -216,6 +280,12 @@ namespace SchoolBuffet.Api.Data.Migrations
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("TrackStock")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -228,7 +298,56 @@ namespace SchoolBuffet.Api.Data.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Products", "public");
+                    b.ToTable("Products", "public", t =>
+                        {
+                            t.HasCheckConstraint("CK_Products_LowStockThreshold", "\"LowStockThreshold\" >= 0");
+
+                            t.HasCheckConstraint("CK_Products_StockQuantity", "\"StockQuantity\" >= 0");
+                        });
+                });
+
+            modelBuilder.Entity("SchoolBuffet.Api.Models.StockMovement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Change")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("character varying(24)");
+
+                    b.Property<int>("StockAfter")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAtUtc");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("StockMovements", "public");
                 });
 
             modelBuilder.Entity("SchoolBuffet.Api.Models.User", b =>
@@ -305,6 +424,24 @@ namespace SchoolBuffet.Api.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("SchoolBuffet.Api.Models.Payment", b =>
+                {
+                    b.HasOne("SchoolBuffet.Api.Models.Order", "Order")
+                        .WithOne("Payment")
+                        .HasForeignKey("SchoolBuffet.Api.Models.Payment", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolBuffet.Api.Models.User", "PaidByUser")
+                        .WithMany()
+                        .HasForeignKey("PaidByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Order");
+
+                    b.Navigation("PaidByUser");
+                });
+
             modelBuilder.Entity("SchoolBuffet.Api.Models.Product", b =>
                 {
                     b.HasOne("SchoolBuffet.Api.Models.Category", "Category")
@@ -316,6 +453,24 @@ namespace SchoolBuffet.Api.Data.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SchoolBuffet.Api.Models.StockMovement", b =>
+                {
+                    b.HasOne("SchoolBuffet.Api.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SchoolBuffet.Api.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SchoolBuffet.Api.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -324,6 +479,8 @@ namespace SchoolBuffet.Api.Data.Migrations
             modelBuilder.Entity("SchoolBuffet.Api.Models.Order", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("SchoolBuffet.Api.Models.Product", b =>

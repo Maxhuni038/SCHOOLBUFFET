@@ -6,7 +6,7 @@ using SchoolBuffet.Api.Services;
 namespace SchoolBuffet.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Manage)]
 [Route("api/admin/orders")]
 public class AdminOrdersController : ControllerBase
 {
@@ -37,13 +37,13 @@ public class AdminOrdersController : ControllerBase
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<OrderDto>> UpdateStatus(int id, [FromBody] UpdateStatusRequest request)
     {
-        return Ok(await _orders.UpdateStatusAsync(id, request.Status, this.User.AdminId()));
+        return Ok(await _orders.UpdateStatusAsync(id, request.Status, this.User.UserId(), kitchenOnly: false));
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<MessageDto>> Delete(int id)
     {
-        await _orders.DeleteAsync(id);
+        await _orders.DeleteAsync(id, this.User.UserId());
         return Ok(new MessageDto("Porosia u fshi nga regjistri."));
     }
 }

@@ -5,7 +5,7 @@ namespace SchoolBuffet.Api.Services;
 
 public static class IdentityExtensions
 {
-    public static int AdminId(this ClaimsPrincipal principal)
+    public static int UserId(this ClaimsPrincipal principal)
     {
         string? raw = principal.FindFirstValue(ClaimTypes.NameIdentifier);
         if (int.TryParse(raw, out int id) && id > 0)
@@ -13,6 +13,6 @@ public static class IdentityExtensions
             return id;
         }
 
-        throw new AppException(HttpStatusCode.Unauthorized, "Sesioni i administratorit nuk u gjet. Hyresh perseri.");
+        throw new AppException(HttpStatusCode.Unauthorized, "Sesioni nuk u gjet. Hyresh perseri.");
     }
 }

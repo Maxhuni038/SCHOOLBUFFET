@@ -28,8 +28,12 @@ public record OrderDto(
     int ItemCount,
     DateTime CreatedAtUtc,
     DateTime UpdatedAtUtc,
+    DateTime? PreparingAtUtc,
+    DateTime? ReadyAtUtc,
     DateTime? CompletedAtUtc,
     string? HandledBy,
+    string? PaymentStatusKey,
+    string? PaymentStatusLabel,
     List<OrderItemDto> Items);
 
 public record UpdateStatusRequest(string? Status);

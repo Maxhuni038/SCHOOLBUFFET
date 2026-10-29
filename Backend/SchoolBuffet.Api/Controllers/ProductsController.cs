@@ -6,7 +6,7 @@ using SchoolBuffet.Api.Services;
 namespace SchoolBuffet.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Manage)]
 [Route("api/admin/products")]
 public class ProductsController : ControllerBase
 {
@@ -35,12 +35,14 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<ProductDto>> Create([FromBody] ProductInput input)
     {
         return Ok(await _catalog.CreateProductAsync(input));
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<ProductDto>> Update(int id, [FromBody] ProductInput input)
     {
         ProductDto before = await _catalog.GetProductAsync(id);
@@ -55,6 +57,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public async Task<ActionResult<MessageDto>> Delete(int id)
     {
         ProductDto product = await _catalog.GetProductAsync(id);

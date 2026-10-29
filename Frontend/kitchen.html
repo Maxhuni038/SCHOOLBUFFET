@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ekrani i Kuzhines · SchoolBuffet</title>
+<meta name="description" content="Pamja e kesjes se kuzhines per porosite e byfese shkollore: radhe ne pritje, duke u pergatitur dhe gati per marrje.">
+<meta name="theme-color" content="#6c5ce7">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/kitchen.css">
+</head>
+<body class="kds">
+
+<div class="kds-login hidden" id="kdsLogin">
+  <form class="kds-login-card" id="kdsLoginForm" autocomplete="on">
+    <span class="kds-login-mark"><svg class="icon icon-lg" aria-hidden="true"><use href="#i-pot"></use></svg></span>
+    <h1>Ekrani i kuzhines</h1>
+    <p class="muted tiny">Byfeja Shkollore · SchoolBuffet KDS</p>
+
+    <div class="field">
+      <label for="Username">Perdoruesi</label>
+      <input class="input" id="Username" name="Username" autocomplete="username" spellcheck="false" required>
+      <span class="field-error"></span>
+    </div>
+
+    <div class="field">
+      <label for="Password">Fjalakalimi</label>
+      <input class="input" id="Password" name="Password" type="password" autocomplete="current-password" required>
+      <span class="field-error"></span>
+    </div>
+
+    <button class="btn btn-block" type="submit" id="kdsLoginBtn">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#i-lock"></use></svg>
+      Hap ekranin e kuzhines
+    </button>
+
+    <p class="tiny muted center mt">Llogarite e kuzhines, punetonjesit dhe administratorit hyrne ne kete pamje.</p>
+  </form>
+</div>
+
+<div class="kds-shell hidden" id="kdsShell">
+  <header class="kds-bar">
+    <div class="kds-brand">
+      <span class="kds-brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-pot"></use></svg></span>
+      <span>Ekrani i kuzhines<small id="kdsDay">Byfeja Shkollore</small></span>
+    </div>
+
+    <div class="kds-clock">
+      <b id="kdsClock">--:--:--</b>
+      <small class="tiny" id="kdsClockDay"> </small>
+    </div>
+
+    <div class="kds-stats" id="kdsStats"></div>
+
+    <div class="kds-tools">
+      <span class="kds-link" id="kdsLink" title="Gjendja e lidhjes me serverin">
+        <span class="kds-link-dot" aria-hidden="true"></span>
+        <span id="kdsLinkText">Duke u lidhur</span>
+      </span>
+
+      <button class="btn btn-soft btn-sm" type="button" id="kdsSoundBtn" aria-pressed="true">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-bell"></use></svg>
+        <span id="kdsSoundText">Tingulli ON</span>
+      </button>
+
+      <button class="btn btn-ghost btn-sm" type="button" id="kdsRefreshBtn" title="Rifresko tani">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-refresh"></use></svg>
+        Rifresko
+      </button>
+
+      <a class="btn btn-ghost btn-sm" href="admin.html">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chart"></use></svg>
+        Paneli
+      </a>
+
+      <button class="btn btn-ghost btn-sm" type="button" id="kdsLogoutBtn">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-logout"></use></svg>
+        Dil
+      </button>
+    </div>
+  </header>
+
+  <main class="kds-board" id="kdsBoard">
+    <section class="kds-col" data-col="new">
+      <header class="kds-col-head">
+        <h2><span class="kds-col-dot" aria-hidden="true"></span>Ne pritje</h2>
+        <span class="kds-col-count" data-count="new">0</span>
+      </header>
+      <div class="kds-col-body" data-body="new">
+        <div class="kds-loading">Duke ngarkuar porosite...</div>
+      </div>
+    </section>
+
+    <section class="kds-col" data-col="preparing">
+      <header class="kds-col-head">
+        <h2><span class="kds-col-dot" aria-hidden="true"></span>Duke u pergatitur</h2>
+        <span class="kds-col-count" data-count="preparing">0</span>
+      </header>
+      <div class="kds-col-body" data-body="preparing">
+        <div class="kds-loading">Duke ngarkuar porosite...</div>
+      </div>
+    </section>
+
+    <section class="kds-col" data-col="ready">
+      <header class="kds-col-head">
+        <h2><span class="kds-col-dot" aria-hidden="true"></span>Gati per marrje</h2>
+        <span class="kds-col-count" data-count="ready">0</span>
+      </header>
+      <div class="kds-col-body" data-body="ready">
+        <div class="kds-loading">Duke ngarkuar porosite...</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="kds-foot">
+    <span class="tiny">Rifreskim automatik · <b id="kdsSeen">0</b> sekonda me pare</span>
+    <span class="tiny" id="kdsFootNote">Ndryshimet nga serveri shfaqen menjehere pa rifreskuar faqen.</span>
+  </footer>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="js/api.js"></script>
+<script src="js/format.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/realtime.js"></script>
+<script src="js/kitchen.js"></script>
+</body>
+</html>

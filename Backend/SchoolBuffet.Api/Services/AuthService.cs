@@ -27,15 +27,26 @@ public sealed class AuthService
             AppThrow.Unauthorized(GenericFailure);
         }
 
-        if (!string.Equals(user!.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+        if (PanelFor(user!.Role) is null)
         {
-            AppThrow.Forbidden("Ky panel eshte i rezervuar per administratoret e byfese.");
+            AppThrow.Forbidden("Kjo llogari nuk ka qasje ne panelet e byfese.");
         }
 
         user.LastLoginUtc = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
         return user;
+    }
+
+    public static string? PanelFor(string? role)
+    {
+        return role switch
+        {
+            AppRoles.Admin => "admin",
+            AppRoles.Staff => "admin",
+            AppRoles.Kitchen => "kitchen",
+            _ => null
+        };
     }
 
     public async Task ChangePasswordAsync(int userId, string? currentPassword, string? newPassword)
@@ -70,11 +81,18 @@ public sealed class AuthService
         User user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId)
             ?? throw new AppException(System.Net.HttpStatusCode.NotFound, "Perdoruesi nuk u gjet.");
 
-        return new AdminUserDto(user.Id, user.FullName, user.Username, user.Role, user.LastLoginUtc);
+        return ToDto(user);
     }
 
     public static AdminUserDto ToDto(User user)
     {
-        return new AdminUserDto(user.Id, user.FullName, user.Username, user.Role, user.LastLoginUtc);
+        return new AdminUserDto(
+            user.Id,
+            user.FullName,
+            user.Username,
+            user.Role,
+            AppRoles.Label(user.Role),
+            PanelFor(user.Role) ?? "admin",
+            user.LastLoginUtc);
     }
 }

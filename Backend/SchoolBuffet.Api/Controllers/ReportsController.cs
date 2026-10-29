@@ -7,7 +7,7 @@ using SchoolBuffet.Api.Services;
 namespace SchoolBuffet.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = AppRoles.Manage)]
 [Route("api/admin/reports")]
 public class ReportsController : ControllerBase
 {
