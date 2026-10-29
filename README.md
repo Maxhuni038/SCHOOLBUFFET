@@ -281,15 +281,6 @@ Per zhvillim me rifreskim te menjehershem mund te perdorsh cdo server statik bre
 - Ngarkesat e fotove kontrollohen per tipin, madhesine dhe emrin, dhe ruhen ne folder te menaxhuar.
 - Te dhenat e lidhjes me databazen dhe fjalakalimet e perdoruesve nuk futen ne repository.
 
-## Rregullat e kodit ne kete projekt
-
-- Asnje koment ne asnje file dhe ne asnje rresht: as ne C#, as ne JavaScript, as ne CSS, as ne HTML, as ne SQL, as ne
-  PowerShell.
-- Shkronja e gjashte e alfabetit shqip, e me dy pika mbi te, nuk perdoret kurre ne kod, tekste, emra variablash,
-  klasash, funksionesh, ne databaze dhe ne dokumentim.
-- Te gjitha tekstet e nderfaqes, mesazhet e suksesshme dhe mesazhet e gabimit jane ne shqip.
-- Pa librari JavaScript ose CSS te jashtme, pa proces ndertimi dhe pa paket npm.
-
 ## Testet e kryera
 
 - Ndertimi i zgjidhjes pa gabime dhe pa paralajmerime.
