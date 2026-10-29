@@ -205,7 +205,7 @@ Per zhvillim me rifreskim te menjehershem mund te perdorsh cdo server statik bre
 1. Hap `http://localhost:5086/index.html`, zgjidh produktet dhe rrit sasin ne shporte.
 2. Kliko `Perfundo porosine`, shkruaj emrin dhe klasen, dhe merr kodin e porosise.
 3. Hap `http://localhost:5086/kitchen.html` dhe hyr me perdoruesin `kuzhina`. Porosia e re shfaqet pa rizarqim.
-4. Kliko `Fillo pergatitjen` dhe pastaj `Sheno gati`. Studenti merr njoftim dhe paneli shek te njejten gjendje.
+4. Kliko `Fillo pergatitjen` dhe pastaj `Sheno gati`. Studenti merr njoftim dhe paneli sheh te njejten gjendje.
 5. Hap `http://localhost:5086/admin.html`, hyr me `admin` ose `staff`, dhe mbyll porosine nga Porosite; pagesa
    shenohet e paguar automatikisht.
 6. Ne Inventar shiko gjendjen e produkteve dhe librin e levizjeve; ne Pagesat konfirmo, kthe ose anulo pagesat.
@@ -263,7 +263,7 @@ Per zhvillim me rifreskim te menjehershem mund te perdorsh cdo server statik bre
 - Secila lidhje ka nje radhe ngjarjesh me kapacitet te kufizuar; ngjarjet e vjetra hiqen qe serveri te mos
   bllokohet nga nje klient i ngadalshem.
 - Klientet pa EventSource, dhe lidhjet e nderprura pas kater perpjekesh, kalojne ne rifreskim me interval.
-- Faqet e fshehta ne sfond nuk kerkojne te dhen pa nevoje; ato rifreskohen kur faqja behet perseri e dukshme.
+- Faqet e fshehta ne sfond nuk kerkojne te dhena pa nevoje; ato rifreskohen kur faqja behet perseri e dukshme.
 
 ## Siguria
 
@@ -273,8 +273,8 @@ Per zhvillim me rifreskim te menjehershem mund te perdorsh cdo server statik bre
   Admin, Staff dhe Kitchen.
 - Hyrja kufizohet ne 8 perpjekje per minute per adresse IP.
 - Validim ne dy ane: frontend mban formatin, backend rregullon gjatesite, numerat, kategorite, statuset dhe stokun.
-- Sasia e stokit ulet me urdher te kushtezuar ne nje hap; porosine qe nuk ka stok mjaftueshem refuzohet me 409,
-  keshtu qe asnje pjese e porosise nuk shkruhet gabimisht.
+- Sasia e stokut ulet me urdher te kushtezuar ne nje hap; porosia qe nuk ka stok mjaftueshem refuzohet me 409,
+  keshtu qe asnje pjese e saj nuk shkruhet gabimisht.
 - Header-at `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options` dhe `Referrer-Policy` vendosen ne
   cdo pergjigje; asnje skript ose stil i jashtem nuk lejohet.
 - Pergjigjet `api/*` sherbehen me `Cache-Control: no-store` qe te dhenat financiare te mos ruhen ne memorie.
